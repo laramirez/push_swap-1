@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <stdlib.h>
-//remove this later
+//
 #include <stdio.h>
 
 int	arenumbers(char **av)
@@ -39,7 +39,6 @@ t_op	*opsinit()
 	return (list);
 }
 
-//create a list of op types using the enum from getnextline
 int		notgetop(t_op *list, char *line)
 {
 	if (!(strcmp(line, "sa")))
@@ -74,16 +73,16 @@ int	valinput(int ac, char **av)
 	int	len;
 
 	len = 0;
+	//
 	while (av[len])
 	{
-		//remove this
 		ft_putstr(av[len]);
 		ft_putchar('\n');
 		len++;
 	}
 	if (ac < 2)
 	{
-		//remember to remove this, supposed to display nothing.
+		//display nothing.
 		printf("enter in a sequence of nubmers");
 		return (0);
 	}
@@ -127,12 +126,12 @@ t_op *getoplist()
 int main(int ac, char **av)
 {
 	t_op	*begin;
-	t_stack	*top;
+	t_stack	*stacka;
 
 	//makes sense to add integer list creation to valinput
 	//b/c it is already reading through once.  can try it.
 	//can also just make a second function if pointers get ugly :-)
-	top = NULL;
+	stacka = NULL;
 	//want to say top = valinput, and return NULL;
 	if (!(valinput(ac, av)))
 			return (0);
