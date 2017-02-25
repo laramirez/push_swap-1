@@ -4,146 +4,71 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <stdlib.h>
+#include <limits.h>
 //
 #include <stdio.h>
 
-int	arenumbers(char **av)
-{
-	int i;
-	int j;
 
-	i = 1;
-	while (av[i])
-	{
-		j = 0;
-		while (av[i][j])
-		{
-			if (!ft_isdigit(av[i][j]))
-			{
-				return (0);
-			}
-			j++;
-		}
-		i++;
-	}
-	return (1);
+void	process_op(t_stack *stacka, t_stack *stackb, t_op *list)
+{
+	stacka = NULL;
+	stackb = NULL;
+	list = NULL;
 }
 
-t_op	*opsinit()
+void	process_ops(t_stack *stacka, t_stack *stackb, t_op *list)
 {
-	t_op *list;
-
-	list = (t_op *)(malloc(sizeof(t_op)));
-	list->op = nothing;
-	list->next = NULL;
-	return (list);
-}
-
-int		notgetop(t_op *list, char *line)
-{
-	if (!(strcmp(line, "sa")))
-		list->op = sa;
-	else if (!(strcmp(line, "sb")))
-		list->op = sb;
-	else if (!(strcmp(line, "ss")))
-		list->op = ss;
-	else if (!(strcmp(line, "pa")))
-		list->op = pa;
-	else if (!(strcmp(line, "pb")))
-		list->op = pb;
-	else if (!(strcmp(line, "ra")))
-		list->op = ra;
-	else if (!(strcmp(line, "rb")))
-		list->op = rb;
-	else if (!(strcmp(line, "rr")))
-		list->op = rr;
-	else if (!(strcmp(line, "rra")))
-		list->op = rra;
-	else if (!(strcmp(line, "rrb")))
-		list->op = rrb;
-	else if (!(strcmp(line, "rrr")))
-		list->op = rrr;
-	else
-		return (1);
-	return (0);
-}
-
-int	valinput(int ac, char **av)
-{
-	int	len;
-
-	len = 0;
-	//
-	while (av[len])
-	{
-		ft_putstr(av[len]);
-		ft_putchar('\n');
-		len++;
-	}
-	if (ac < 2)
-	{
-		//display nothing.
-		printf("enter in a sequence of nubmers");
-		return (0);
-	}
-	if (!arenumbers(av))
-	{
-		write(1, "Error\n", 6);
-		return (0);
-	}
-	return (1);
-}
-
-t_op *getoplist()
-{
-	int		i;
-	char	*line;
-	t_op	*list;
 	t_op	*begin;
 
-	i = 0;
-	line = NULL;
-	list = opsinit();
 	begin = list;
-	while (get_next_line(0, &line))
+	while (begin)
 	{
-		if (i == 0)
-		{
-			begin = list;
-		}
-		if (notgetop(list, line))
-		{
-			ft_printf("KO\n");
-			return (0);
-		}
-		list->next = opsinit();
-		list = list->next;
-		i++;
+		process_op(stacka, stackb, list);
 	}
-	return (begin);
 }
 
 int main(int ac, char **av)
 {
 	t_op	*begin;
 	t_stack	*stacka;
+	t_stack *stackb;
 
-	//makes sense to add integer list creation to valinput
-	//b/c it is already reading through once.  can try it.
-	//can also just make a second function if pointers get ugly :-)
+	//declare stacks, sta
 	stacka = NULL;
-	//want to say top = valinput, and return NULL;
-	if (!(valinput(ac, av)))
+	stackb = NULL;
+	//get stack a AND validate it's input
+	if (!(stacka = valinput(ac, av, stacka)))
 			return (0);
+	ft_printf("INPUT VALIDATED, INSERT OP COMMANDS\n");
+	//get ops and validate input
 	begin = getoplist();
 
-	//now is where you start executing instructions on the stack.
+	//i want to break out debug functions so i can test easier
+	//debug_pstacks(&stacka, &stackb);
+
+
+
+	//this is debug functions
 	while (begin)
 	{
+//		printf("op:%d\n", begin->op);
 		if (!(begin->op == nothing))
 			printf("op:%d\n", begin->op);
 		begin = begin->next;
 	}
+	while (stacka)
+	{
+		printf("stack:%d\n", stacka->v);
+		stacka = stacka->nx;
+	}
 	ft_putstr("END OF PROGRAM\n");
 	return (0);
 }
+
+/*
+$>./checker 3 2 1 0
+rra
+pb sa
+rra pa
+OK
+*/
