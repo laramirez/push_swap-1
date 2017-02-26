@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:22:44 by mgould            #+#    #+#             */
-/*   Updated: 2017/02/25 08:02:45 by mgould           ###   ########.fr       */
+/*   Updated: 2017/02/26 08:12:27 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-t_op	*opsinit()
+t_op	*opsinit(void)
 {
 	t_op *list;
 
@@ -28,7 +28,7 @@ t_op	*opsinit()
 	return (list);
 }
 
-t_stack	*stackinit()
+t_stack	*stackinit(void)
 {
 	t_stack *stack;
 
@@ -67,7 +67,7 @@ int		notgetop(t_op *list, char *line)
 	return (0);
 }
 
-t_op	*getoplist()
+t_op	*getoplist(void)
 {
 	char	*line;
 	t_op	*list;
@@ -93,7 +93,3 @@ t_op	*getoplist()
 	prev->next = NULL;
 	return (begin);
 }
-
-
-
-

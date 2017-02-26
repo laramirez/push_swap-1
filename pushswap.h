@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/22 14:06:08 by mgould            #+#    #+#             */
-/*   Updated: 2017/02/25 08:38:10 by mgould           ###   ########.fr       */
+/*   Updated: 2017/02/26 08:27:13 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,6 @@ int				validnumbers(char **av);
 t_stack			*makestack(char **av);
 t_stack			*valinput(int ac, char **av, t_stack *stacka);
 int				notgetop(t_op *list, char *line);
-void			debug_pstacks(t_stack **stacka, t_stack **stackb);
+void			debug_pstacks(t_stack *stacka, t_stack *stackb);
 void			process_op(t_stack *stacka, t_stack *stackb, t_op *list);
 #endif

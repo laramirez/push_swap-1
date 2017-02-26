@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:43:26 by mgould            #+#    #+#             */
-/*   Updated: 2017/02/24 10:47:30 by mgould           ###   ########.fr       */
+/*   Updated: 2017/02/26 08:14:33 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-int	validnumbers(char **av)
+int		validnumbers(char **av)
 {
 	int i;
 	int j;
@@ -40,16 +40,16 @@ int	validnumbers(char **av)
 	return (1);
 }
 
-t_stack *makestack(char **av)
+t_stack	*makestack(char **av)
 {
-	int i;
+	int		i;
 	t_stack *stack;
 	t_stack *begin;
 
 	i = 1;
 	stack = stackinit();
 	begin = stack;
-	while(av[i])
+	while (av[i])
 	{
 		stack->v = (int)ps_big_atoi(av[i]);
 		if (!av[i + 1])
@@ -61,7 +61,7 @@ t_stack *makestack(char **av)
 	return (begin);
 }
 
-t_stack *valinput(int ac, char **av, t_stack *stacka)
+t_stack	*valinput(int ac, char **av, t_stack *stacka)
 {
 	int	len;
 
