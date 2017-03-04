@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:22:44 by mgould            #+#    #+#             */
-/*   Updated: 2017/02/26 08:12:27 by mgould           ###   ########.fr       */
+/*   Updated: 2017/02/27 14:13:44 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_op	*opsinit(void)
 
 	list = (t_op *)(malloc(sizeof(t_op)));
 	list->op = nothing;
+	list->fp = NULL;
 	list->next = NULL;
 	return (list);
 }
@@ -39,6 +40,37 @@ t_stack	*stackinit(void)
 }
 
 int		notgetop(t_op *list, char *line)
+{
+	if (!(strcmp(line, "sa")))
+		list->fp = &fsa;
+	else if (!(strcmp(line, "sb")))
+		list->op = sb;
+	else if (!(strcmp(line, "ss")))
+		list->op = ss;
+	else if (!(strcmp(line, "pa")))
+		list->op = pa;
+	else if (!(strcmp(line, "pb")))
+		list->op = pb;
+	else if (!(strcmp(line, "ra")))
+		list->op = ra;
+	else if (!(strcmp(line, "rb")))
+		list->op = rb;
+	else if (!(strcmp(line, "rr")))
+		list->op = rr;
+	else if (!(strcmp(line, "rra")))
+		list->op = rra;
+	else if (!(strcmp(line, "rrb")))
+		list->op = rrb;
+	else if (!(strcmp(line, "rrr")))
+		list->op = rrr;
+	else
+		return (1);
+	return (0);
+}
+
+/*
+code before using function pointers
+int		optpointer(t_op *list, char *line)
 {
 	if (!(strcmp(line, "sa")))
 		list->op = sa;
@@ -66,6 +98,7 @@ int		notgetop(t_op *list, char *line)
 		return (1);
 	return (0);
 }
+*/
 
 t_op	*getoplist(void)
 {
