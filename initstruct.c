@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:22:44 by mgould            #+#    #+#             */
-/*   Updated: 2017/02/27 14:13:44 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/04 19:18:28 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,25 +44,28 @@ int		notgetop(t_op *list, char *line)
 	if (!(strcmp(line, "sa")))
 		list->fp = &fsa;
 	else if (!(strcmp(line, "sb")))
-		list->op = sb;
+		list->fp = &fsb;
 	else if (!(strcmp(line, "ss")))
-		list->op = ss;
+	;
+		//	list->fp = &fss;
 	else if (!(strcmp(line, "pa")))
-		list->op = pa;
+		list->fp = &fpa;
 	else if (!(strcmp(line, "pb")))
-		list->op = pb;
+		list->fp = &fpb;
+	/*
 	else if (!(strcmp(line, "ra")))
-		list->op = ra;
+		list->fp = &fra;
 	else if (!(strcmp(line, "rb")))
-		list->op = rb;
+		list->fp = &frb;
 	else if (!(strcmp(line, "rr")))
-		list->op = rr;
+		list->fp = &frr;
 	else if (!(strcmp(line, "rra")))
-		list->op = rra;
+		list->fp = &frra;
 	else if (!(strcmp(line, "rrb")))
-		list->op = rrb;
+		list->fp = &frrb;
 	else if (!(strcmp(line, "rrr")))
-		list->op = rrr;
+		list->fp = &frrr;
+	*/
 	else
 		return (1);
 	return (0);
