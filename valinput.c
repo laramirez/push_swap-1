@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:43:26 by mgould            #+#    #+#             */
-/*   Updated: 2017/02/26 08:14:33 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/04 21:51:31 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ t_stack	*makestack(char **av)
 		if (!av[i + 1])
 			return (begin);
 		stack->nx = stackinit();
+		(stack->nx)->pv = stack;
 		stack = stack->nx;
 		i++;
 	}

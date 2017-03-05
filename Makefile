@@ -6,7 +6,7 @@
 #    By: mgould <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/02/22 11:22:29 by mgould            #+#    #+#              #
-#    Updated: 2017/03/04 19:02:07 by mgould           ###   ########.fr        #
+#    Updated: 2017/03/04 21:41:44 by mgould           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ LIBA = /nfs/2016/m/mgould/thelibrary/libft.a
 
 CFLAGS = -Wall -Wextra -Werror -I $(LIB) -I .
 
-OBJCS = checker.o initstruct.o valinput.o debug.o fswap.o fpush.o
+OBJCS = checker.o initstruct.o valinput.o debug.o fswap.o fpush.o frot.o \
+		frevrot.o
 
 all: $(NAME1)
 

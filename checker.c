@@ -5,8 +5,6 @@
 #include <sys/uio.h>
 #include <stdlib.h>
 #include <limits.h>
-//
-#include <stdio.h>
 
 
 void	processops(t_stack **stacka, t_stack **stackb, t_op *oplist)
@@ -16,7 +14,6 @@ void	processops(t_stack **stacka, t_stack **stackb, t_op *oplist)
 	begin = oplist;
 	if (!(begin->fp))
 	{
-		ft_printf("you got here\n");
 		return ;
 	}
 	while (begin)
@@ -27,6 +24,27 @@ void	processops(t_stack **stacka, t_stack **stackb, t_op *oplist)
 	}
 }
 
+int		isordered(t_stack *stacka, t_stack *stackb)
+{
+	int tmp;
+
+	if (stackb)
+	{
+		return (0);
+	}
+	else if (!(stacka))
+		return (0);
+	tmp = stacka->v;
+	while (stacka->nx)
+	{
+		if ((stacka->nx)->v > tmp)
+			tmp = stacka->v;
+		else
+			return (0);
+		stacka = stacka->nx;
+	}
+	return (1);
+}
 
 int main(int ac, char **av)
 {
@@ -42,9 +60,11 @@ int main(int ac, char **av)
 	oplist = getoplist();
 
 	processops(&stacka, &stackb, oplist);
-	//ft_printf("After sorting\n");
-	//debug_pstacks(stacka, stackb);
 
+	if (isordered(stacka, stackb))
+		ft_printf("OK\n");
+	else
+		ft_printf("KO\n");
 
 	ft_printf("END OF PROGRAM\n");
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:22:44 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/04 19:18:28 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/04 22:40:07 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,11 @@ int		notgetop(t_op *list, char *line)
 	else if (!(strcmp(line, "sb")))
 		list->fp = &fsb;
 	else if (!(strcmp(line, "ss")))
-	;
-		//	list->fp = &fss;
+		list->fp = &fss;
 	else if (!(strcmp(line, "pa")))
 		list->fp = &fpa;
 	else if (!(strcmp(line, "pb")))
 		list->fp = &fpb;
-	/*
 	else if (!(strcmp(line, "ra")))
 		list->fp = &fra;
 	else if (!(strcmp(line, "rb")))
@@ -65,43 +63,10 @@ int		notgetop(t_op *list, char *line)
 		list->fp = &frrb;
 	else if (!(strcmp(line, "rrr")))
 		list->fp = &frrr;
-	*/
 	else
 		return (1);
 	return (0);
 }
-
-/*
-code before using function pointers
-int		optpointer(t_op *list, char *line)
-{
-	if (!(strcmp(line, "sa")))
-		list->op = sa;
-	else if (!(strcmp(line, "sb")))
-		list->op = sb;
-	else if (!(strcmp(line, "ss")))
-		list->op = ss;
-	else if (!(strcmp(line, "pa")))
-		list->op = pa;
-	else if (!(strcmp(line, "pb")))
-		list->op = pb;
-	else if (!(strcmp(line, "ra")))
-		list->op = ra;
-	else if (!(strcmp(line, "rb")))
-		list->op = rb;
-	else if (!(strcmp(line, "rr")))
-		list->op = rr;
-	else if (!(strcmp(line, "rra")))
-		list->op = rra;
-	else if (!(strcmp(line, "rrb")))
-		list->op = rrb;
-	else if (!(strcmp(line, "rrr")))
-		list->op = rrr;
-	else
-		return (1);
-	return (0);
-}
-*/
 
 t_op	*getoplist(void)
 {

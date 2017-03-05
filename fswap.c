@@ -37,3 +37,9 @@ void	fsb(t_stack **stacka, t_stack **stackb)
 		*stackb = tmpb;
 	}
 }
+
+void	fss(t_stack **stacka, t_stack **stackb)
+{
+	fsa(stacka, stackb);
+	fsb(stacka, stackb);
+}

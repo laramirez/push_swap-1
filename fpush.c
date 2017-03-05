@@ -31,20 +31,20 @@ void	fpb(t_stack **stacka, t_stack **stackb)
 void	fpa(t_stack **stacka, t_stack **stackb)
 {
 
-	if (*stacka)
+	if (*stackb)
 	{
 		if (!(*stackb))
 		{
-			*stackb = *stacka;
-			*stacka = (*stacka)->nx;
-			(*stackb)->nx = NULL;
+			*stacka = *stackb;
+			*stackb = (*stackb)->nx;
+			(*stacka)->nx = NULL;
 		}
 		else
 		{
-			(*stackb)->pv = *stacka;
-			((*stackb)->pv)->nx = *stackb;
-			*stackb = (*stackb)->pv;
+			(*stacka)->pv = *stackb;
+			*stackb = (*stackb)->nx;
+			((*stacka)->pv)->nx = *stacka;
+			*stacka = (*stacka)->pv;
 		}
-		*stacka = (*stacka)->nx;
 	}
 }
