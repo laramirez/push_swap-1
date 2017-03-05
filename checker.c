@@ -56,16 +56,13 @@ int main(int ac, char **av)
 	stackb = NULL;
 	if (!(stacka = valinput(ac, av, stacka)))
 			return (0);
-	ft_printf("INPUT VALIDATED, INSERT OP COMMANDS\n");
+	//ft_printf("INPUT VALIDATED, INSERT OP COMMANDS\n");
 	oplist = getoplist();
-
 	processops(&stacka, &stackb, oplist);
-
 	if (isordered(stacka, stackb))
 		ft_printf("OK\n");
 	else
 		ft_printf("KO\n");
-
-	ft_printf("END OF PROGRAM\n");
+	//ft_printf("END OF PROGRAM\n");
 	return (0);
 }
