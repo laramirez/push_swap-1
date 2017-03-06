@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:43:26 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/04 22:45:15 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/05 20:41:06 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,21 @@ int		validnumbers(char **av)
 	while (av[i])
 	{
 		if (ps_big_atoi(av[i]) > INT_MAX || ps_big_atoi(av[i]) < INT_MIN)
+		{
 			return (0);
+		}
 		j = 0;
 		while (av[i][j])
 		{
-			if (!ft_isdigit(av[i][j]))
-				return (0);
+			if (av[i][j] == ' ')
+				;
+			else if (!ft_isdigit(av[i][j]))
+			{
+				if (!(av[i][j] == '-' && ft_isdigit(av[i][j + 1])))
+				{
+					return (0);
+				}
+			}
 			j++;
 		}
 		i++;
@@ -40,9 +49,14 @@ int		validnumbers(char **av)
 	return (1);
 }
 
+//problem is i'm getting a dumb list and i have to split it up somehow.
+//and it fucking sucks
+//
 t_stack	*makestack(char **av)
 {
 	int		i;
+	int		j;
+	char	**tmp;
 	t_stack *stack;
 	t_stack *begin;
 
@@ -51,12 +65,24 @@ t_stack	*makestack(char **av)
 	begin = stack;
 	while (av[i])
 	{
-		stack->v = (int)ps_big_atoi(av[i]);
+		tmp = ft_strsplit(av[i], ' ');
+		j = 0;
+		while (tmp[j])
+		{
+			stack->v = (int)ps_big_atoi(*tmp);
+			stack->nx = stackinit();
+			(stack->nx)->pv = stack;
+			stack = stack->nx;
+			j++;
+			ft_printf("%s\n", tmp);
+			sleep(1);
+		}
+		//stack->v = (int)ps_big_atoi(*tmp);
 		if (!av[i + 1])
 			return (begin);
-		stack->nx = stackinit();
-		(stack->nx)->pv = stack;
-		stack = stack->nx;
+	//	stack->nx = stackinit();
+	//	(stack->nx)->pv = stack;
+	//	stack = stack->nx;
 		i++;
 	}
 	return (begin);
