@@ -6,7 +6,7 @@
 #    By: mgould <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/02/22 11:22:29 by mgould            #+#    #+#              #
-#    Updated: 2017/03/05 10:41:38 by mgould           ###   ########.fr        #
+#    Updated: 2017/03/06 14:50:18 by mgould           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ CFLAGS = -Wall -Wextra -Werror -I $(LIB) -I .
 OBJCS = checker.o initstruct.o valinput.o debug.o fswap.o fpush.o frot.o \
 		frevrot.o valops.o
 
-OBJCS2 = push_swap.o valinput.o initstruct.o
+OBJCS2 = push_swap.o valinput.o initstruct.o fswap.o fpush.o frot.o \
+		 frevrot.o valops.o ordercheck.o debug.o
 
 all: $(NAME1) $(NAME2)
 

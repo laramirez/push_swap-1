@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/22 14:06:08 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/04 21:41:23 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/06 21:08:16 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ typedef struct	s_stack
 	int				v;
 	struct s_stack	*pv;
 	struct s_stack	*nx;
+	int				g;
 }				t_stack;
 
 typedef struct	s_op
@@ -38,6 +39,7 @@ t_stack			*valinput(int ac, char **av, t_stack *stacka);
 int				notgetop(t_op *list, char *line);
 void			debug_pstacks(t_stack *stacka, t_stack *stackb);
 void			process_op(t_stack **stacka, t_stack **stackb, t_op *list);
+int				isrevordered(t_stack *stacka, t_stack *stackb);
 /*
 ** operation functions
 */

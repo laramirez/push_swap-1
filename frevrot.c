@@ -20,6 +20,8 @@ void	frra(t_stack **stacka, t_stack **stackb)
 		(tmpa->pv)->nx = NULL;
 		(*stacka)->pv = tmpa;
 		tmpa->nx = *stacka;
+		//
+		tmpa->pv = NULL;
 		*stacka = tmpa;
 	}
 }

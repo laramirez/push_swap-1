@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:22:44 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/05 10:39:55 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/06 21:08:28 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,6 @@ t_stack	*stackinit(void)
 	stack = (t_stack *)(malloc(sizeof(t_stack)));
 	stack->pv = NULL;
 	stack->nx = NULL;
+	stack->g = 0;
 	return (stack);
 }

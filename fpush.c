@@ -33,7 +33,7 @@ void	fpa(t_stack **stacka, t_stack **stackb)
 
 	if (*stackb)
 	{
-		if (!(*stackb))
+		if (!(*stacka))
 		{
 			*stacka = *stackb;
 			*stackb = (*stackb)->nx;
