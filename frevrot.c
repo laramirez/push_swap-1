@@ -5,6 +5,8 @@
 #include <sys/uio.h>
 #include <stdlib.h>
 #include <limits.h>
+//
+#include <stdio.h>
 
 void	frra(t_stack **stacka, t_stack **stackb)
 {
@@ -16,13 +18,14 @@ void	frra(t_stack **stacka, t_stack **stackb)
 	if (*stacka && (*stacka)->nx)
 	{
 		while (tmpa->nx)
+		{
 			tmpa = tmpa->nx;
+		}
+		tmpa->nx = *stacka;
 		(tmpa->pv)->nx = NULL;
 		(*stacka)->pv = tmpa;
-		tmpa->nx = *stacka;
-		//
-		tmpa->pv = NULL;
-		*stacka = tmpa;
+		(*stacka) = tmpa;
+		(*stacka)->pv = NULL;
 	}
 }
 
@@ -37,10 +40,18 @@ void	frrb(t_stack **stacka, t_stack **stackb)
 	{
 		while (tmpb->nx)
 			tmpb = tmpb->nx;
+		tmpb->nx = *stackb;
+		(tmpb->pv)->nx = NULL;
+		(*stackb)->pv = tmpb;
+		(*stackb) = tmpb;
+		(*stackb)->pv = NULL;
+
+		/*
 		(tmpb->pv)->nx = NULL;
 		(*stackb)->pv = tmpb;
 		tmpb->nx = *stackb;
 		*stackb = tmpb;
+		*/
 	}
 }
 

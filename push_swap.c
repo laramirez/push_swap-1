@@ -27,6 +27,8 @@ static t_stack	*getend(t_stack **stack)
 {
 	t_stack *end;
 
+	if (!(*stack))
+		return (NULL);
 	end = *stack;
 	while (end->nx)
 		end = end->nx;
@@ -68,64 +70,56 @@ void	initsets(t_stack **sa, t_stack **sb)
 
 	count = 0;
 	end = getend(sa);
-	debug_pstacks(*sa, *sb);
 	while (*sa)
 	{
-		printf("top\n");
-		printf("what is happening\n");
-		debug_pstacks(*sa, *sb);
 		sleep(1);
 		if ((!(*sa)->nx))
 		{
-			printf("one\n");
+			printf("one:fpb\n");
 			fpb(sa, sb);
 		}
 		else if ((*sa)->v < end->v && (*sa)->v < ((*sa)->nx)->v)
 		{
-			printf("two\n");
+			printf("two:fpb\n");
 			fpb(sa, sb);
 		}
 		else if (((*sa)->nx)->v < (end)->v && ((*sa)->nx)->v < (*sa)->v)
 		{
-			printf("three\n");
+			printf("three:fsa\n");
 			fsa(sa, sb);
 		}
-		else if ((( (stacklen(*sa) == 2) && (end->v < (*sa)->v))) ||
+		else if ((( (stacklen(*sa) == 1) && (end->v < (*sa)->v))) ||
 				(end->v < (*sa)->v && (end)->v <= ((*sa)->nx)->v))
 		{
-			printf("four\n");
+			printf("four:frra\n");
 			frra(sa, sb);
-			printf("four after rotate\n");
-			debug_pstacks(*sa, *sb);
-			fpb(sa, sb);
-			printf("four after push to b\n");
-			debug_pstacks(*sa, *sb);
-			count++;
 		}
 		else
 		{
-			printf("five\n");
+			printf("five:fpb\n");
 			fpb(sa, sb);
 		}
 
 		if ((*sb)->nx && ((*sb)->v < ((*sb)->nx)->v))
 		{
-			printf("you got here\n");
 			if((*sb)->v < ((getend(sb))->v))
 				frb(sa, sb);
 			else
 				fsb(sa, sb);
 			count++;
 		}
-		printf("past if else\n");
 		count++;
-		bassigngroups(sb);
-		printf("past assign groups\n");
 
+		bassigngroups(sb);
+//		print out groups! for debugging!
 		debug_pstacks(*sa, *sb);
-		printf("past debug pstacks\n");
 		end = getend(sa);
-		printf("past getend\n");
+		//if 2 groups, then return
+		//check rotational polarity as an end condition.
+		//rotational polarity A, . . B, then rotate and fix it adding ops, break,
+		//and return.
+		//although rotational polarity is probably more like group polarity.
+		//like "if total number of groups is 2 then you have rotational polarity.
 	}
 	printf("ops count is %d\n", count);
 	//assign groups after the sort.
@@ -164,6 +158,8 @@ void	smerge(t_stack **stacka, t_stack **stackb, int len)
 		ft_printf("early return\n");
 		return ;
 	}
+	debug_pstacks(*stacka, *stackb);
+	printf("*****************\n");
 	initsets(stacka, stackb);
 }
 
@@ -173,6 +169,7 @@ int main(int ac, char **av)
 	t_stack *stackb;
 	int		len;
 
+	printf("you are fuckikng here \n\n");
 	stacka = NULL;
 	stackb = NULL;
 	if (!(stacka = valinput(ac, av, stacka)))
@@ -188,86 +185,3 @@ int main(int ac, char **av)
 
 	return (0);
 }
-
-
-
-/*
-static int	depth(int len)
-{
-	int i;
-	int j;
-
-	i = 1;
-	j = 0;
-	while (i < len)
-	{
-		i *= 2;
-		j++;
-	}
-	return (j);
-}
-*/
-
-
-
-//lookup first element of next group.
-//if else function to pop correclty to other function.
-//think if you have to do some mod thing to check groups.
-////potentially update group numbers to avoid dump mod thing
-//as you move groups over
-//you can update the number of groups each time you call this funciton.
-//as long as you rotate all the way through, groups will retain
-//relative order
-//set them into groups of at least 2 to start, using the 4 sort trick.
-//then compare adjacent groups
-
-/*
-static int	pairs(t_stack **sa, t_stack **sb)
-{
-	//make helper functions and norm this gigantic mess AFTER
-	//you confirm that it will work :-)
-	int i;
-
-	i = 0;
-	ft_printf("in pairs\n");
-	while ((*sa) && (*sa)->nx && ((*sa)->nx)->nx && (((*sa)->nx)->nx)->nx)
-	{
-		ft_printf("inside while\n");
-		i++;
-		fpb(sa, sb);
-		fpb(sa, sb);
-		(*sb)->g = i;
-		((*sb)->nx)->g = i;
-
-		if ((*sa)->v > ((*sa)->nx)->v && (*sb)->v < ((*sb)->nx)->v)
-			fss(sa, sb);
-		else if ((*sa)->v > ((*sa)->nx)->v  )
-			fsa(sa, sb);
-		else if ((*sb)->v < ((*sb)->nx)->v )
-			fsb(sa, sb);
-		i++;
-		fpb(sa, sb);
-		fpb(sa, sb);
-		(*sb)->g = i;
-		((*sb)->nx)->g = i;
-	}
-	while ((*sa) && (*sa)->nx)
-	{
-		if ((*sa)->v > ((*sa)->nx)->v  )
-			fsa(sa, sb);
-		i++;
-		fpb(sa, sb);
-		fpb(sa, sb);
-		(*sb)->g = i;
-		((*sb)->nx)->g = i;
-	}
-	if ((*sa))
-	{
-		i++;
-		fpb(sa, sb);
-		(*sb)->g = i;
-	}
-	return (i);
-}
-*/
-

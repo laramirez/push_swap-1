@@ -9,7 +9,9 @@
 
 void	fpb(t_stack **stacka, t_stack **stackb)
 {
+	t_stack *tmp;
 
+	tmp = *stacka;
 	if (*stacka)
 	{
 		if (!(*stackb))
@@ -17,20 +19,27 @@ void	fpb(t_stack **stacka, t_stack **stackb)
 			*stackb = *stacka;
 			*stacka = (*stacka)->nx;
 			(*stackb)->nx = NULL;
+			(*stackb)->pv = NULL;
 		}
 		else
 		{
-			(*stackb)->pv = *stacka;
 			*stacka = (*stacka)->nx;
-			((*stackb)->pv)->nx = *stackb;
-			*stackb = (*stackb)->pv;
+			tmp->nx = (*stackb);
+			(*stackb)->pv = tmp;
+			*stackb = tmp;
 		}
+	}
+	if (*stacka)
+	{
+		(*stacka)->pv = NULL;
 	}
 }
 
 void	fpa(t_stack **stacka, t_stack **stackb)
 {
+	t_stack *tmp;
 
+	tmp = *stackb;
 	if (*stackb)
 	{
 		if (!(*stacka))
@@ -38,13 +47,19 @@ void	fpa(t_stack **stacka, t_stack **stackb)
 			*stacka = *stackb;
 			*stackb = (*stackb)->nx;
 			(*stacka)->nx = NULL;
+			(*stacka)->pv = NULL;
 		}
 		else
 		{
-			(*stacka)->pv = *stackb;
 			*stackb = (*stackb)->nx;
-			((*stacka)->pv)->nx = *stacka;
-			*stacka = (*stacka)->pv;
+			tmp->nx = (*stacka);
+			(*stacka)->pv = tmp;
+			*stacka = tmp;
 		}
 	}
+	if (*stackb)
+	{
+		(*stackb)->pv = NULL;
+	}
+
 }

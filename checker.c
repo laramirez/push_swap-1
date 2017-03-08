@@ -16,6 +16,8 @@ void	processops(t_stack **stacka, t_stack **stackb, t_op *oplist)
 	{
 		return ;
 	}
+	//
+	debug_pstacks(*stacka, *stackb);
 	while (begin)
 	{
 		begin->fp(stacka, stackb);
@@ -49,30 +51,6 @@ int		isordered(t_stack *stacka, t_stack *stackb)
 	}
 	return (1);
 }
-
-/*
-int		isrevordered(t_stack *stacka, t_stack *stackb)
-{
-	int tmp;
-
-	if (stacka)
-		return (0);
-	else if (!(stackb))
-		return (0);
-	tmp = stackb->v;
-	while (stackb->nx)
-	{
-		if ((stackb->nx)->v < tmp)
-			tmp = (stackb->nx)->v;
-		else if ((stackb->nx)->v == tmp)
-			return (2);
-		else
-			return (0);
-		stackb = stackb->nx;
-	}
-	return (1);
-}
-*/
 
 int main(int ac, char **av)
 {
