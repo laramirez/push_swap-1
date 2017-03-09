@@ -35,17 +35,46 @@ static t_stack	*getend(t_stack **stack)
 	return (end);
 }
 
-static void		bassigngroups(t_stack **stack)
+static int	aassigngroups(t_stack **stack)
 {
 	int i;
 	int tmp;
 	t_stack *stemp;
 
 	if (!(*stack))
-		return ;
+		return (0);
 	stemp = *stack;
 	tmp = (stemp)->v;
 	i = 1;
+	while (stemp)
+	{
+		if ((stemp)->v >= tmp)
+		{
+			(stemp)->g = i;
+			tmp = stemp->v;
+		}
+		else
+		{
+			i++;
+			tmp = (stemp)->v;
+			continue;
+		}
+		(stemp) = (stemp)->nx;
+	}
+	return (i);
+}
+
+static int	bassigngroups(t_stack **stack)
+{
+	int i;
+	int tmp;
+	t_stack *stemp;
+
+	if (!(*stack))
+		return (0);
+	i = 1;
+	stemp = *stack;
+	tmp = (stemp)->v;
 	while (stemp)
 	{
 		if ((stemp)->v <= tmp)
@@ -61,7 +90,37 @@ static void		bassigngroups(t_stack **stack)
 		}
 		(stemp) = (stemp)->nx;
 	}
+	return (i);
 }
+
+
+void	mergestack(t_stack **sa, t_stack **sb, int *count)
+{
+	t_stack *tmpb;
+	int		group;
+
+	group = (*sb)->g;
+	tmpb = *sb;
+	//handles the case where the list is only 1 long. . .
+	while (tmpb->v < (tmpb->nx)->v)
+	{
+		printf("mergestack:fsb\n");
+		fsb(sa, sb);
+		*count += 1;
+		if (revordered(*sb))
+		{
+			bassigngroups(sb);
+			debug_pstacks(*sa, *sb);
+			break;
+		}
+		debug_pstacks(*sa, *sb);
+		frb(sa, sb);
+		printf("mergestack:frb\n");
+		debug_pstacks(*sa, *sb);
+		*count += 1;
+	}
+}
+
 
 void	initsets(t_stack **sa, t_stack **sb)
 {
@@ -70,16 +129,23 @@ void	initsets(t_stack **sa, t_stack **sb)
 
 	count = 0;
 	end = getend(sa);
+	if (aassigngroups(sa) == 1)
+		return ;
+	//if only one group, it's already ordered!
 	while (*sa)
 	{
-		sleep(1);
-		if ((!(*sa)->nx))
+		usleep(300000);
+		if ((!(*sa)->nx) || ((*sa)->v < end->v && (*sa)->v < ((*sa)->nx)->v))
 		{
-			printf("one:fpb\n");
-			fpb(sa, sb);
-		}
-		else if ((*sa)->v < end->v && (*sa)->v < ((*sa)->nx)->v)
-		{
+
+			printf("you are in comp for group 2\n");
+			if ((*sb) && (*sa)->v < (*sb)->v && bassigngroups(sb) > 1)
+			{
+				printf("you are here\n");
+				mergestack(sa, sb, &count);
+				//check the merge size, will have to
+				//pass variable to this function.  this is the Tim Sort part
+			}
 			printf("two:fpb\n");
 			fpb(sa, sb);
 		}
@@ -88,64 +154,44 @@ void	initsets(t_stack **sa, t_stack **sb)
 			printf("three:fsa\n");
 			fsa(sa, sb);
 		}
-		else if ((( (stacklen(*sa) == 1) && (end->v < (*sa)->v))) ||
+		else if ((((stacklen(*sa) == 1) && (end->v < (*sa)->v))) ||
 				(end->v < (*sa)->v && (end)->v <= ((*sa)->nx)->v))
 		{
 			printf("four:frra\n");
 			frra(sa, sb);
 		}
-		else
-		{
-			printf("five:fpb\n");
-			fpb(sa, sb);
-		}
 
-		if ((*sb)->nx && ((*sb)->v < ((*sb)->nx)->v))
+
+		if((*sb) && (*sb)->v < ((getend(sb))->v))
 		{
-			if((*sb)->v < ((getend(sb))->v))
-				frb(sa, sb);
-			else
-				fsb(sa, sb);
+			frb(sa, sb);
 			count++;
 		}
 		count++;
-
-		bassigngroups(sb);
-//		print out groups! for debugging!
+		aassigngroups(sa);
 		debug_pstacks(*sa, *sb);
 		end = getend(sa);
-		//if 2 groups, then return
-		//check rotational polarity as an end condition.
-		//rotational polarity A, . . B, then rotate and fix it adding ops, break,
-		//and return.
-		//although rotational polarity is probably more like group polarity.
-		//like "if total number of groups is 2 then you have rotational polarity.
+		if (ordered(*sa))
+		{
+			// EASY WIN IS HERE, IF THERE ARE ONLY 2 GROUPS WHEN SA IS
+			// ORDERED, THEN YOU DESIGN FUNCTION TO INSERT ON SORTED
+			// LIST INTO ANOTHER - CAN USE THIS IN OTHER FUNCTIONS TO
+			// SOLVE THIS THING!
+			//improve mergestack so it handles more thhna just the first
+			//variable.  it handles whole list.
+			//also fix so that it combines to the right sizes, including
+			//the list on the left side.  decide how you will fit into
+			//the list on the left sid.
+			//think about if you have an odd number of groups, etc.
+			mergestack(sa, sb, &count);
+
+			//if there are only 2 groups total, do the merge.
+			break;
+			//this is where the tim logic comes in.
+		}
 	}
 	printf("ops count is %d\n", count);
-	//assign groups after the sort.
 }
-
-/*
-void	sets(t_stack **sa, t_stack **sb)
-{
-	int groups;
-	t_stack *tmp;
-
-	groups = 0;
-	ft_printf("groups is:%d\n", groups);
-	if (*sa)
-		tmp = *sa;
-	else
-		tmp = *sb;
-	while (tmp)
-	{
-
-
-		printf("tmp->v:%d\n", tmp->v);
-		tmp = tmp->nx;
-	}
-}
-*/
 
 void	smerge(t_stack **stacka, t_stack **stackb, int len)
 {
@@ -168,20 +214,46 @@ int main(int ac, char **av)
 	t_stack	*stacka;
 	t_stack *stackb;
 	int		len;
+	int		minrun;
+	int		i;
 
-	printf("you are fuckikng here \n\n");
+	i = 32;
 	stacka = NULL;
 	stackb = NULL;
 	if (!(stacka = valinput(ac, av, stacka)))
 			return (0);
 	len = stacklen(stacka);
+	if (len < 65)
+		minrun = len;
+	else
+		while ((minrun = (len / i)) > 64)
+		{
+			i *= 2;
+		}
+
+	printf("I is:%d, minrun is:%d", i, minrun);
+/*
+minrun is chosen from the range 32 to 64 inclusive, such that the size of the data, divided by minrun, is equal to, or slightly smaller than, a power of two.
+*/
 	printf("stacklen:%d\n", len);
-	//do some checks here
-	//is it already sorted?
-	//can it be solved by rotation?
-	//is it less than X?
 	smerge(&stacka, &stackb, len);
-
-
 	return (0);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

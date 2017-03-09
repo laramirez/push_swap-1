@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/22 14:06:08 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/06 21:08:16 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/08 16:27:46 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ int				notgetop(t_op *list, char *line);
 void			debug_pstacks(t_stack *stacka, t_stack *stackb);
 void			process_op(t_stack **stacka, t_stack **stackb, t_op *list);
 int				isrevordered(t_stack *stacka, t_stack *stackb);
+int				revordered(t_stack *stackb);
+int				ordered(t_stack *stackb);
 /*
 ** operation functions
 */
