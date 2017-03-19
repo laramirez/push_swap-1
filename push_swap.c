@@ -72,7 +72,7 @@ static int	bassigngroups(t_stack **stack)
 
 	if (!(*stack))
 		return (0);
-	i = 1;
+	i = -1;
 	stemp = *stack;
 	tmp = (stemp)->v;
 	while (stemp)
@@ -84,7 +84,7 @@ static int	bassigngroups(t_stack **stack)
 		}
 		else
 		{
-			i++;
+			i--;
 			tmp = (stemp)->v;
 			continue;
 		}
@@ -98,34 +98,84 @@ void	mergestack(t_stack **sa, t_stack **sb, int *count)
 {
 	t_stack *tmpb;
 	int		group;
+	t_stack *end;
+
 
 	if (!(*sb))
 		return ;
 	group = (*sb)->g;
 	tmpb = *sb;
+	end = getend(sb);
+	while ((*sb)->g == group)
+	{
+		fpa(sa, sb);
+		*count += 1;
+	}
+	debug_pstacks(*sa, *sb);
+	ft_putstr_color("second while of merge function-\n\n", 2);
+	//may need to get the smallest and largest in group, determine where to insert.
+	while ((*sa)->g == group)
+	{
+		//should be SIMPLE WHILE LOOP HERE TO STICK BETWEEN 2 NUMBERS!KJEE
+		if ((*sa)->v < end->v)
+		{
+			fpb(sa, sb);
+			frb(sa, sb);
+			*count += 2;
+			continue;
+		}
+		else if ((*sa)->v < (*sb)->v)
+		{
+			while ((*sa)->v < (*sb)->v)
+			{
+				frb(sa, sb);
+				*count += 1;
+			}
+			//may rotate back to starting position here so it's set up right
+		}
+		else if ((*sa)->v > (*sb)->v && !((*sa)->v < end->v))
+		{
+			while ((*sa)->v > (*sb)->v && !((*sa)->v < end->v))
+			{
+				frrb(sa, sb);
+				*count += 1;
+			}
+		}
+		else
+			fpb(sa, sb);
+		*count += 1;
+		end = getend(sb);
+	}
+	ft_putstr_color("after second while of merge function-\n\n", 2);
+	debug_pstacks(*sa, *sb);
+	/*
 	//handles the case where the list is only 1 long. . .
 	while (tmpb->v < (tmpb->nx)->v)
 	{
+		usleep(300000);
 		printf("mergestack:fsb\n");
 		fsb(sa, sb);
 		*count += 1;
+		bassigngroups(sb);
+		debug_pstacks(*sa, *sb);
 		if (revordered(*sb))
 		{
-			bassigngroups(sb);
-			debug_pstacks(*sa, *sb);
 			break;
 		}
-		debug_pstacks(*sa, *sb);
 		frb(sa, sb);
 		printf("mergestack:frb\n");
+		bassigngroups(sb);
 		debug_pstacks(*sa, *sb);
 		*count += 1;
 	}
+	*/
 }
 
 //two functions
 //merge stack b by itself
 //merge stack a and b together
+//you can remove count once you have a function that lists the operations.
+//can create list of operators function whenever, right now it is count.
 
 void	initsets(t_stack **sa, t_stack **sb)
 {
@@ -134,8 +184,6 @@ void	initsets(t_stack **sa, t_stack **sb)
 
 	count = 0;
 	end = getend(sa);
-
-	//if only one group, it's already ordered!
 	while (*sa)
 	{
 		//remove this usleep
@@ -144,7 +192,7 @@ void	initsets(t_stack **sa, t_stack **sb)
 		{
 
 			printf("you are in comp for group 2\n");
-			if ((*sb) && (*sa)->v < (*sb)->v && bassigngroups(sb) > 1)
+			if ((*sb) && (*sa)->v < (*sb)->v && absolute_value(bassigngroups(sb)) > 1)
 			{
 				printf("you are here\n");
 				mergestack(sa, sb, &count);
@@ -172,6 +220,7 @@ void	initsets(t_stack **sa, t_stack **sb)
 		}
 		count++;
 		aassigngroups(sa);
+		bassigngroups(sb);
 		debug_pstacks(*sa, *sb);
 		end = getend(sa);
 		if (ordered(*sa))
