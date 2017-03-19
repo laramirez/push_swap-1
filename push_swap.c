@@ -8,7 +8,7 @@
 //
 #include <stdio.h>
 
-static int	stacklen(t_stack *stack)
+int	stacklen(t_stack *stack)
 {
 	int i;
 	t_stack *tmp;
@@ -99,6 +99,8 @@ void	mergestack(t_stack **sa, t_stack **sb, int *count)
 	t_stack *tmpb;
 	int		group;
 
+	if (!(*sb))
+		return ;
 	group = (*sb)->g;
 	tmpb = *sb;
 	//handles the case where the list is only 1 long. . .
@@ -121,6 +123,9 @@ void	mergestack(t_stack **sa, t_stack **sb, int *count)
 	}
 }
 
+//two functions
+//merge stack b by itself
+//merge stack a and b together
 
 void	initsets(t_stack **sa, t_stack **sb)
 {
@@ -129,11 +134,11 @@ void	initsets(t_stack **sa, t_stack **sb)
 
 	count = 0;
 	end = getend(sa);
-	if (aassigngroups(sa) == 1)
-		return ;
+
 	//if only one group, it's already ordered!
 	while (*sa)
 	{
+		//remove this usleep
 		usleep(300000);
 		if ((!(*sa)->nx) || ((*sa)->v < end->v && (*sa)->v < ((*sa)->nx)->v))
 		{
@@ -160,8 +165,6 @@ void	initsets(t_stack **sa, t_stack **sb)
 			printf("four:frra\n");
 			frra(sa, sb);
 		}
-
-
 		if((*sb) && (*sb)->v < ((getend(sb))->v))
 		{
 			frb(sa, sb);
@@ -184,10 +187,9 @@ void	initsets(t_stack **sa, t_stack **sb)
 			//the list on the left sid.
 			//think about if you have an odd number of groups, etc.
 			mergestack(sa, sb, &count);
-
-			//if there are only 2 groups total, do the merge.
+			//if there are < 2 groups total, do the merge and return
 			break;
-			//this is where the tim logic comes in.
+			//this is where the merge logic comes in.
 		}
 	}
 	printf("ops count is %d\n", count);
@@ -196,7 +198,6 @@ void	initsets(t_stack **sa, t_stack **sb)
 void	smerge(t_stack **stacka, t_stack **stackb, int len)
 {
 	int i;
-	//int tmp;
 
 	i = 0;
 	if (len <= 1)
@@ -204,39 +205,64 @@ void	smerge(t_stack **stacka, t_stack **stackb, int len)
 		ft_printf("early return\n");
 		return ;
 	}
+	if (aassigngroups(stacka) == 1)
+	{
+		printf("already ordered\n");
+		return ;
+	}
 	debug_pstacks(*stacka, *stackb);
 	printf("*****************\n");
 	initsets(stacka, stackb);
 }
 
+static int getminrun(t_stack *stacka)
+{
+	int i;
+	int ret;
+
+	ret = 0;
+	//set the minimum lower boundary here, currently at 16
+	i = 16;
+	ret = stacklen(stacka);
+	if (ret < 65)
+	{
+		if (ret < i && ret > 1)
+			ret = i;
+	}
+	else
+	{
+		while ((ret = (ret / i)) > 64)
+			i *= 2;
+	}
+	return (ret);
+}
+
+//to do 3.19.2017
+//decide if i'm going to sort stack b as I go and that's it - no back and forth
+//get it to merge in stack b, stack b + stack a (when 1 in each), so it can return
+//logic here on how to merge / when to merge, like if it's bigger than a certain size;
+//the lower boundary size then don't merge it, keep sorting; look for run in stack a.
+//create a thing to capture the ops list
+//
+
 int main(int ac, char **av)
 {
 	t_stack	*stacka;
 	t_stack *stackb;
-	int		len;
 	int		minrun;
-	int		i;
 
-	i = 32;
 	stacka = NULL;
 	stackb = NULL;
 	if (!(stacka = valinput(ac, av, stacka)))
 			return (0);
-	len = stacklen(stacka);
-	if (len < 65)
-		minrun = len;
-	else
-		while ((minrun = (len / i)) > 64)
-		{
-			i *= 2;
-		}
-
-	printf("I is:%d, minrun is:%d", i, minrun);
+	minrun = getminrun(stacka);
+	printf("minrun is:%d\n", minrun);
 /*
-minrun is chosen from the range 32 to 64 inclusive, such that the size of the data, divided by minrun, is equal to, or slightly smaller than, a power of two.
+minrun is chosen from the range 32 to 64 inclusive, such that the size of the data, divided by minrun, is equal to, or slightly smaller than, a power of two.  However in
+this case I set a lower bound of 16 since we have small data sets.  I may not need
+a lower bound?
 */
-	printf("stacklen:%d\n", len);
-	smerge(&stacka, &stackb, len);
+	smerge(&stacka, &stackb, minrun);
 	return (0);
 }
 
