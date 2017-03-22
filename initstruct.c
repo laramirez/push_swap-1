@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:22:44 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/21 20:41:48 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/22 14:20:49 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,14 +101,3 @@ void	printelement2(t_onum num)
 	else if (num == RRR)
 		ft_putstr("rrr\n");
 }
-
-/*
-void	printoutlist(t_op *outlist)
-{
-	while (outlist)
-	{
-		printelement(outlist->num);
-		outlist = outlist->next;
-	}
-}
-*/

@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/22 14:06:08 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/21 20:38:53 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/22 14:40:32 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int				getminrun(t_stack *stacka);
 void			printoutlist(t_out *outlist);
 void			printelement(t_optype num);
 void			printelement2(t_onum num);
+void			doop(t_onum num, t_stack **sa, t_stack **sb);
 /*
 ** operation functions
 */

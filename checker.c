@@ -26,7 +26,6 @@ void	processops(t_stack **stacka, t_stack **stackb, t_op *oplist)
 		*/
 		//
 		debug_pstacks(*stacka, *stackb);
-		usleep(400000);
 	}
 }
 
