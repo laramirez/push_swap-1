@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/22 14:06:08 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/08 16:27:46 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/21 20:38:53 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define PUSHSWAP_H
 
 typedef enum s_optype {sa, sb, ss, pa, pb, ra, rb, rr, rra, rrb, rrr, nothing} t_optype;
+
+typedef enum s_onum {SA, SB, SS, PA, PB, RA, RB, RR, RRA, RRB, RRR, NOTHING} t_onum;
 
 typedef struct	s_stack
 {
@@ -30,6 +32,12 @@ typedef struct	s_op
 	struct s_op		*next;
 }				t_op;
 
+typedef struct	s_out
+{
+	t_onum			num;
+	struct s_out	*nx;
+}				t_out;
+
 t_op			*opsinit();
 t_stack			*stackinit();
 t_op			*getoplist();
@@ -42,6 +50,21 @@ void			process_op(t_stack **stacka, t_stack **stackb, t_op *list);
 int				isrevordered(t_stack *stacka, t_stack *stackb);
 int				revordered(t_stack *stackb);
 int				ordered(t_stack *stackb);
+t_out			*outinit();
+/*
+** helper functions
+*/
+int				stacklen(t_stack *stack);
+t_stack			*getend(t_stack **stack);
+int				aassigngroups(t_stack **stack);
+int				bassigngroups(t_stack **stack);
+int				getminrun(t_stack *stacka);
+/*
+** print out list from pushswap
+*/
+void			printoutlist(t_out *outlist);
+void			printelement(t_optype num);
+void			printelement2(t_onum num);
 /*
 ** operation functions
 */

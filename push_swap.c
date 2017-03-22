@@ -8,101 +8,170 @@
 //
 #include <stdio.h>
 
-int	stacklen(t_stack *stack)
-{
-	int i;
-	t_stack *tmp;
+//it's easiest to do if there's only 1 list that is ordered on stackb, so let's try
+//that way first.
 
-	tmp = stack;
-	i = 0;
+int		getlargest(t_stack *sb)
+{
+	int		largest;
+	t_stack	*tmp;
+
+	tmp = sb;
+	largest = tmp->v;
 	while (tmp)
 	{
+		if (largest < tmp->v)
+			largest = tmp->v;
 		tmp = tmp->nx;
-		i++;
 	}
-	return (i);
+	return (largest);
 }
 
-static t_stack	*getend(t_stack **stack)
+
+int		getsmallest(t_stack *sb)
 {
-	t_stack *end;
+	int		smallest;
+	t_stack	*tmp;
 
-	if (!(*stack))
-		return (NULL);
-	end = *stack;
-	while (end->nx)
-		end = end->nx;
-	return (end);
-}
-
-static int	aassigngroups(t_stack **stack)
-{
-	int i;
-	int tmp;
-	t_stack *stemp;
-
-	if (!(*stack))
-		return (0);
-	stemp = *stack;
-	tmp = (stemp)->v;
-	i = 1;
-	while (stemp)
+	tmp = sb;
+	smallest = tmp->v;
+	while (tmp)
 	{
-		if ((stemp)->v >= tmp)
-		{
-			(stemp)->g = i;
-			tmp = stemp->v;
-		}
-		else
-		{
-			i++;
-			tmp = (stemp)->v;
-			continue;
-		}
-		(stemp) = (stemp)->nx;
+		if (smallest > tmp->v)
+			smallest = tmp->v;
+		tmp = tmp->nx;
 	}
-	return (i);
+	return (smallest);
 }
 
-static int	bassigngroups(t_stack **stack)
+void	updateret(t_out *ret, t_onum op)
 {
-	int i;
-	int tmp;
-	t_stack *stemp;
+	t_out *tmp;
 
-	if (!(*stack))
-		return (0);
-	i = -1;
-	stemp = *stack;
-	tmp = (stemp)->v;
-	while (stemp)
-	{
-		if ((stemp)->v <= tmp)
-		{
-			(stemp)->g = i;
-			tmp = stemp->v;
-		}
-		else
-		{
-			i--;
-			tmp = (stemp)->v;
-			continue;
-		}
-		(stemp) = (stemp)->nx;
-	}
-	return (i);
+	tmp = ret;
+	while (tmp->nx)
+		tmp = tmp->nx;
+	tmp->num = op;
+	tmp->nx = outinit();
+
 }
 
 
-void	mergestack(t_stack **sa, t_stack **sb, int *count)
+void	mergestack(t_stack **sa, t_stack **sb, int *count, t_out *ret)
 {
 	t_stack *tmpb;
 	int		group;
 	t_stack *end;
+	int		largest;
 
 
 	if (!(*sb))
 		return ;
+	largest = 0;
+	group = (*sb)->g;
+	tmpb = *sb;
+	end = getend(sb);
+	while ((*sb)->g == group)
+	{
+		fpa(sa, sb);
+		updateret(ret, PA);
+		*count += 1;
+	}
+	//debug_pstacks(*sa, *sb);
+	ft_putstr_color_fd("second while of merge function-\n\n", 2, 2);
+	while ((*sa)->g == group)
+	{
+		if (ordered(*sa))
+			break;
+		else if ((*sa)->v < end->v && ((*sa)->v) < (*sb)->v)
+		{
+			//smallest number on stack check
+			fpb(sa, sb);
+			frb(sa, sb);
+			updateret(ret, PB);
+			updateret(ret, RB);
+			*count += 2;
+			continue;
+		}
+		else if ((*sa)->v < (*sb)->v)
+		{
+			while ((*sa)->v < (*sb)->v)
+			{
+				frb(sa, sb);
+				updateret(ret, RB);
+				*count += 1;
+			}
+			//debug_pstacks(*sa, *sb);
+			ft_putstr_color_fd("after moving to insertion spot\n\n", 2, 2);
+			fpb(sa, sb);
+			updateret(ret, PB);
+		}
+		else if ((*sa)->v > (*sb)->v && !((*sa)->v < end->v))
+		{
+			ft_putstr_color_fd("before moving to insertion spot top\n\n", 2, 2);
+			//debug_pstacks(*sa, *sb);
+			//if it's greater than everythign else
+			if ((*sa)->v > (largest = getlargest(*sb)))
+			{
+				ft_putstr_color_fd("before moving to insertion spot\n\n", 2, 2);
+				while ((*sb)->v != largest)
+				{
+					frrb(sa, sb);
+					updateret(ret, RRB);
+					*count += 1;
+				}
+			}
+			else
+			{
+				ft_putstr_color_fd("rotating back to start\n\n", 1, 2);
+				printf("count is %d\n", *count);
+				while (((*sa)->v > (*sb)->v) && ((*sa)->v > end->v))
+				{
+					frrb(sa, sb);
+					updateret(ret, RRB);
+					*count += 1;
+					end = getend(sb);
+				}
+				printf("count is %d\n", *count);
+			}
+			//debug_pstacks(*sa, *sb);
+			fpb(sa, sb);
+			updateret(ret, PB);
+		}
+		else
+		{
+			fpb(sa, sb);
+			updateret(ret, PB);
+		}
+		*count += 1;
+		end = getend(sb);
+	}
+	ft_putstr_color_fd("after second while of merge function-\n\n", 2, 2);
+	//debug_pstacks(*sa, *sb);
+	largest = getlargest(*sb);
+	while ((*sb)->v != largest)
+	{
+		frb(sa, sb);
+		updateret(ret, RB);
+		*count += 1;
+	}
+	ft_putstr_color_fd("\n after rotating stack B\n\n", 1, 2);
+	bassigngroups(sb);
+	//debug_pstacks(*sa, *sb);
+}
+
+/*
+void	mergestack2(t_stack **sa, t_stack **sb, int *count, t_out ret)
+{
+	t_stack *tmpb;
+	int		group;
+	t_stack *end;
+	int		largest;
+
+
+	if (!(*sb))
+		return ;
+	largest = 0;
 	group = (*sb)->g;
 	tmpb = *sb;
 	end = getend(sb);
@@ -112,13 +181,14 @@ void	mergestack(t_stack **sa, t_stack **sb, int *count)
 		*count += 1;
 	}
 	debug_pstacks(*sa, *sb);
-	ft_putstr_color("second while of merge function-\n\n", 2);
-	//may need to get the smallest and largest in group, determine where to insert.
+	ft_putstr_color_fd("second while of merge function-\n\n", 2, 2);
 	while ((*sa)->g == group)
 	{
-		//should be SIMPLE WHILE LOOP HERE TO STICK BETWEEN 2 NUMBERS!KJEE
-		if ((*sa)->v < end->v)
+		if (ordered(*sa))
+			break;
+		else if ((*sa)->v < end->v && ((*sa)->v) < (*sb)->v)
 		{
+			//smallest number on stack check
 			fpb(sa, sb);
 			frb(sa, sb);
 			*count += 2;
@@ -131,168 +201,271 @@ void	mergestack(t_stack **sa, t_stack **sb, int *count)
 				frb(sa, sb);
 				*count += 1;
 			}
-			//may rotate back to starting position here so it's set up right
+			debug_pstacks(*sa, *sb);
+			ft_putstr_color_fd("after moving to insertion spot\n\n", 2, 2);
+			fpb(sa, sb);
 		}
 		else if ((*sa)->v > (*sb)->v && !((*sa)->v < end->v))
 		{
-			while ((*sa)->v > (*sb)->v && !((*sa)->v < end->v))
+			ft_putstr_color_fd("before moving to insertion spot top\n\n", 2, 2);
+			debug_pstacks(*sa, *sb);
+			//if it's greater than everythign else
+			if ((*sa)->v > (largest = getlargest(*sb)))
 			{
-				frrb(sa, sb);
-				*count += 1;
+				ft_putstr_color_fd("before moving to insertion spot\n\n", 2, 2);
+				while ((*sb)->v != largest)
+				{
+					frrb(sa, sb);
+					*count += 1;
+				}
 			}
+			else
+			{
+				ft_putstr_color_fd("rotating back to start\n\n", 1, 2);
+				printf("count is %d\n", *count);
+				while (((*sa)->v > (*sb)->v) && ((*sa)->v > end->v))
+				{
+					frrb(sa, sb);
+					*count += 1;
+					end = getend(sb);
+				}
+				printf("count is %d\n", *count);
+			}
+			debug_pstacks(*sa, *sb);
+			fpb(sa, sb);
 		}
 		else
 			fpb(sa, sb);
 		*count += 1;
 		end = getend(sb);
 	}
-	ft_putstr_color("after second while of merge function-\n\n", 2);
+	ft_putstr_color_fd("after second while of merge function-\n\n", 2, 2);
 	debug_pstacks(*sa, *sb);
-	/*
-	//handles the case where the list is only 1 long. . .
-	while (tmpb->v < (tmpb->nx)->v)
+	largest = getlargest(*sb);
+	while ((*sb)->v != largest)
 	{
-		usleep(300000);
-		printf("mergestack:fsb\n");
-		fsb(sa, sb);
-		*count += 1;
-		bassigngroups(sb);
-		debug_pstacks(*sa, *sb);
-		if (revordered(*sb))
-		{
-			break;
-		}
 		frb(sa, sb);
-		printf("mergestack:frb\n");
-		bassigngroups(sb);
-		debug_pstacks(*sa, *sb);
 		*count += 1;
 	}
-	*/
+	ft_putstr_color_fd(ft_itoa(largest), 1, 2);
+	ft_putstr_color_fd("\n after rotating stack B\n\n", 1, 2);
+	bassigngroups(sb);
+	debug_pstacks(*sa, *sb);
 }
+*/
 
-//two functions
-//merge stack b by itself
-//merge stack a and b together
-//you can remove count once you have a function that lists the operations.
-//can create list of operators function whenever, right now it is count.
-
-void	initsets(t_stack **sa, t_stack **sb)
+void	mergetwo(t_stack **sa, t_stack **sb, int *count, t_out *ret)
 {
+	int	smallest;
+	int largest;
 	t_stack *end;
-	int count;
 
-	count = 0;
 	end = getend(sa);
-	while (*sa)
+	smallest = getsmallest(*sa);
+	largest = getlargest(*sb);
+	while (*sb)
 	{
-		//remove this usleep
-		usleep(300000);
-		if ((!(*sa)->nx) || ((*sa)->v < end->v && (*sa)->v < ((*sa)->nx)->v))
+		//rotate to smallest
+		//rotate to largest (at top of all if else
+		if ((*sb)->v < (smallest = getsmallest(*sa)))
 		{
-
-			printf("you are in comp for group 2\n");
-			if ((*sb) && (*sa)->v < (*sb)->v && absolute_value(bassigngroups(sb)) > 1)
+			while ((*sa)->v != smallest)
 			{
-				printf("you are here\n");
-				mergestack(sa, sb, &count);
-				//check the merge size, will have to
-				//pass variable to this function.  this is the Tim Sort part
+				fra(sa, sb);
+				updateret(ret, RB);
+				*count += 1;
 			}
-			printf("two:fpb\n");
-			fpb(sa, sb);
+			fpa(sa, sb);
+			updateret(ret, PA);
 		}
-		else if (((*sa)->nx)->v < (end)->v && ((*sa)->nx)->v < (*sa)->v)
+		else if ((*sa)->v > (largest = getlargest(*sb)))
 		{
-			printf("three:fsa\n");
-			fsa(sa, sb);
+			while ((*sb)->v != largest)
+			{
+				frb(sa, sb);
+				updateret(ret, RB);
+				*count += 1;
+			}
+			fpa(sa, sb);
+			updateret(ret, PA);
 		}
-		else if ((((stacklen(*sa) == 1) && (end->v < (*sa)->v))) ||
-				(end->v < (*sa)->v && (end)->v <= ((*sa)->nx)->v))
+		else if ((*sb)->v > (*sa)->v)
 		{
-			printf("four:frra\n");
+			fra(sa, sb);
+			updateret(ret, RA);
+		}
+		else if ((*sb)->v < (*sa)->v && (*sb)->v > end->v)
+		{
+			fpa(sa, sb);
+			updateret(ret, PA);
+		}
+		else if ((*sb)->v < (*sa)->v && (*sb)->v > end->v)
+		{
 			frra(sa, sb);
+			updateret(ret, RRA);
 		}
-		if((*sb) && (*sb)->v < ((getend(sb))->v))
-		{
-			frb(sa, sb);
-			count++;
-		}
-		count++;
-		aassigngroups(sa);
-		bassigngroups(sb);
-		debug_pstacks(*sa, *sb);
+		*count += 1;
 		end = getend(sa);
-		if (ordered(*sa))
-		{
-			// EASY WIN IS HERE, IF THERE ARE ONLY 2 GROUPS WHEN SA IS
-			// ORDERED, THEN YOU DESIGN FUNCTION TO INSERT ON SORTED
-			// LIST INTO ANOTHER - CAN USE THIS IN OTHER FUNCTIONS TO
-			// SOLVE THIS THING!
-			//improve mergestack so it handles more thhna just the first
-			//variable.  it handles whole list.
-			//also fix so that it combines to the right sizes, including
-			//the list on the left side.  decide how you will fit into
-			//the list on the left sid.
-			//think about if you have an odd number of groups, etc.
-			mergestack(sa, sb, &count);
-			//if there are < 2 groups total, do the merge and return
-			break;
-			//this is where the merge logic comes in.
-		}
+		//debug_pstacks(*sa, *sb);
 	}
-	printf("ops count is %d\n", count);
+	smallest = getsmallest(*sa);
+	while ((*sa)->v != smallest)
+	{
+		fra(sa, sb);
+		updateret(ret, RA);
+		*count += 1;
+	}
+
 }
 
-void	smerge(t_stack **stacka, t_stack **stackb, int len)
+/*
+void	decision(t_stack **sa, t_stack **sb, t_stack *end, int *count)
+{
+	if ((!(*sa)->nx) || ((*sa)->v < end->v && (*sa)->v < ((*sa)->nx)->v))
+	{
+		//if only 1 in list, or it is smaller than the other two
+		fprintf(stderr, "you are in comp for group 2\n");
+		//if ((*sb) && ((*sa)->v < (*sb)->v) && (bassigngroups(sb) > 1))
+		if ((*sb) && ((*sa)->v < (*sb)->v) && (bassigngroups(sb) > 1))
+		{
+
+			ft_putstr_color_fd("more than one group in stack b\n\n", 2, 2);
+			mergestack(sa, sb, count);
+			//check the merge size, will have to
+			//pass variable to this function.  this is the Tim Sort part
+		}
+		fprintf(stderr, "two:fpb\n");
+		fpb(sa, sb);
+	}
+	else if (((*sa)->nx)->v < (*sa)->v)
+	{
+		//do the swap first, since it may solve the puzzle in rotationally ordered
+		fsa(sa, sb);
+		fprintf(stderr, "two and a half:fsa\n");
+	}
+	else if (((*sa)->nx)->v <= (end)->v && ((*sa)->nx)->v < (*sa)->v)
+	{
+		//if nx is less than the other two
+		fprintf(stderr, "three:fsa\n");
+		fsa(sa, sb);
+	}
+	else if ((((stacklen(*sa) == 1) && (end->v < (*sa)->v))) ||
+			(end->v < (*sa)->v && (end)->v <= ((*sa)->nx)->v))
+	{
+		// if end is less than the other two
+		fprintf(stderr, "four:frra\n");
+		frra(sa, sb);
+	}
+	//this is an optimization
+	if((*sb) && (*sb)->v < ((getend(sb))->v))
+	{
+		frb(sa, sb);
+		*count += 1;
+	}
+	*count += 1;
+}
+*/
+
+
+void	printret(t_out *ret)
 {
 	int i;
 
 	i = 0;
-	if (len <= 1)
+	while (ret)
 	{
-		ft_printf("early return\n");
-		return ;
+		if (ret->num == NOTHING)
+			break;
+		printelement2(ret->num);
+		ret = ret->nx;
+		i++;
 	}
-	if (aassigngroups(stacka) == 1)
-	{
-		printf("already ordered\n");
-		return ;
-	}
-	debug_pstacks(*stacka, *stackb);
-	printf("*****************\n");
-	initsets(stacka, stackb);
 }
 
-static int getminrun(t_stack *stacka)
+void	decision2(t_stack **sa, t_stack **sb, t_stack *end, int *count, t_out *ret)
+{
+	if ((!(*sa)->nx) || ((*sa)->v < end->v && (*sa)->v < ((*sa)->nx)->v))
+	{
+		if ((*sb) && ((*sa)->v < (*sb)->v) && (bassigngroups(sb) > 1))
+			mergestack(sa, sb, count, ret);
+		fpb(sa, sb);
+		updateret(ret, PB);
+	}
+	else if (((*sa)->nx)->v < (*sa)->v)
+	{
+		fsa(sa, sb);
+		updateret(ret, SA);
+	}
+	else if (((*sa)->nx)->v <= (end)->v && ((*sa)->nx)->v < (*sa)->v)
+	{
+		fsa(sa, sb);
+		updateret(ret, SA);
+	}
+	else if ((((stacklen(*sa) == 1) && (end->v < (*sa)->v))) ||
+			(end->v < (*sa)->v && (end)->v <= ((*sa)->nx)->v))
+	{
+		frra(sa, sb);
+		updateret(ret, RRA);
+	}
+	if((*sb) && (*sb)->v < ((getend(sb))->v))
+	{
+		frb(sa, sb);
+		updateret(ret, RB);
+		*count += 1;
+	}
+	*count += 1;
+}
+
+void	sortstacks(t_stack **sa, t_stack **sb)
+{
+	t_stack *end;
+	int 	count;
+	t_out	*ret;
+
+	count = 0;
+	end = getend(sa);
+	ret = outinit();
+	while (*sa)
+	{
+		//usleep(150000);
+
+		decision2(sa, sb, end, &count, ret);
+		//decision(sa, sb, end, &count);
+		aassigngroups(sa);
+		bassigngroups(sb);
+		//debug_pstacks(*sa, *sb);
+		end = getend(sa);
+		if (ordered(*sa))
+		{
+			while (bassigngroups(sb) > 1)
+			{
+				mergestack(sa, sb, &count, ret);
+			}
+			mergetwo(sa, sb, &count, ret);
+			//
+			//debug_pstacks(*sa, *sb);
+			break;
+		}
+	}
+	//print ops here
+	fprintf(stderr, "ops count is %d\n", count);
+	printret(ret);
+}
+
+void	stim(t_stack **stacka, t_stack **stackb, int minrun)
 {
 	int i;
-	int ret;
 
-	ret = 0;
-	//set the minimum lower boundary here, currently at 16
-	i = 16;
-	ret = stacklen(stacka);
-	if (ret < 65)
+	i = 0;
+	if (aassigngroups(stacka) == 1)
 	{
-		if (ret < i && ret > 1)
-			ret = i;
+		fprintf(stderr, "already ordered\n");
+		return ;
 	}
-	else
-	{
-		while ((ret = (ret / i)) > 64)
-			i *= 2;
-	}
-	return (ret);
+	fprintf(stderr, "minrun is:%d\n", minrun);
+	//debug_pstacks(*stacka, *stackb);
+	sortstacks(stacka, stackb);
 }
-
-//to do 3.19.2017
-//decide if i'm going to sort stack b as I go and that's it - no back and forth
-//get it to merge in stack b, stack b + stack a (when 1 in each), so it can return
-//logic here on how to merge / when to merge, like if it's bigger than a certain size;
-//the lower boundary size then don't merge it, keep sorting; look for run in stack a.
-//create a thing to capture the ops list
-//
 
 int main(int ac, char **av)
 {
@@ -304,14 +477,10 @@ int main(int ac, char **av)
 	stackb = NULL;
 	if (!(stacka = valinput(ac, av, stacka)))
 			return (0);
+	//not currently used, can not use until after group sorting is solved
 	minrun = getminrun(stacka);
-	printf("minrun is:%d\n", minrun);
-/*
-minrun is chosen from the range 32 to 64 inclusive, such that the size of the data, divided by minrun, is equal to, or slightly smaller than, a power of two.  However in
-this case I set a lower bound of 16 since we have small data sets.  I may not need
-a lower bound?
-*/
-	smerge(&stacka, &stackb, minrun);
+	//
+	stim(&stacka, &stackb, minrun);
 	return (0);
 }
 

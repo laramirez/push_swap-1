@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:22:44 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/06 21:08:28 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/21 20:41:48 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,3 +39,76 @@ t_stack	*stackinit(void)
 	stack->g = 0;
 	return (stack);
 }
+
+t_out	*outinit()
+{
+	t_out	*outlist;
+
+	outlist = (t_out *)(malloc(sizeof(t_out)));
+	outlist->nx = NULL;
+	outlist->num = NOTHING;
+	return (outlist);
+}
+
+void	printelement(t_optype num)
+{
+	if (num == sa)
+		ft_putstr("sa\n");
+	else if (num == sb)
+		ft_putstr("sb\n");
+	else if (num == ss)
+		ft_putstr("ss\n");
+	else if (num == pa)
+		ft_putstr("pa\n");
+	else if (num == pb)
+		ft_putstr("pb\n");
+	else if (num == ra)
+		ft_putstr("ra\n");
+	else if (num == rb)
+		ft_putstr("rb\n");
+	else if (num == rr)
+		ft_putstr("rr\n");
+	else if (num == rra)
+		ft_putstr("rra\n");
+	else if (num == rrb)
+		ft_putstr("rrb\n");
+	else if (num == rrr)
+		ft_putstr("rrr\n");
+}
+
+void	printelement2(t_onum num)
+{
+	if (num == SA)
+		ft_putstr("sa\n");
+	else if (num == SB)
+		ft_putstr("sb\n");
+	else if (num == SS)
+		ft_putstr("ss\n");
+	else if (num == PA)
+		ft_putstr("pa\n");
+	else if (num == PB)
+		ft_putstr("pb\n");
+	else if (num == RA)
+		ft_putstr("ra\n");
+	else if (num == RB)
+		ft_putstr("rb\n");
+	else if (num == RR)
+		ft_putstr("rr\n");
+	else if (num == RRA)
+		ft_putstr("rra\n");
+	else if (num == RRB)
+		ft_putstr("rrb\n");
+	else if (num == RRR)
+		ft_putstr("rrr\n");
+}
+
+/*
+void	printoutlist(t_op *outlist)
+{
+	while (outlist)
+	{
+		printelement(outlist->num);
+		outlist = outlist->next;
+	}
+}
+*/

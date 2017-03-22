@@ -16,8 +16,7 @@ void	processops(t_stack **stacka, t_stack **stackb, t_op *oplist)
 	{
 		return ;
 	}
-	//
-	debug_pstacks(*stacka, *stackb);
+	//debug_pstacks(*stacka, *stackb);
 	while (begin)
 	{
 		begin->fp(stacka, stackb);
