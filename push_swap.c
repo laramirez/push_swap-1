@@ -124,7 +124,6 @@ void	mergestack(t_stack **sa, t_stack **sb, int *count, t_out *ret)
 			else
 			{
 				ft_putstr_color_fd("rotating back to start\n\n", 1, 2);
-				printf("count is %d\n", *count);
 				while (((*sa)->v > (*sb)->v) && ((*sa)->v > end->v))
 				{
 					frrb(sa, sb);
@@ -132,7 +131,6 @@ void	mergestack(t_stack **sa, t_stack **sb, int *count, t_out *ret)
 					*count += 1;
 					end = getend(sb);
 				}
-				printf("count is %d\n", *count);
 			}
 			//debug_pstacks(*sa, *sb);
 			fpb(sa, sb);
@@ -272,13 +270,13 @@ void	mergetwo(t_stack **sa, t_stack **sb, int *count, t_out *ret)
 			while ((*sa)->v != smallest)
 			{
 				fra(sa, sb);
-				updateret(ret, RB);
+				updateret(ret, RA);
 				*count += 1;
 			}
 			fpa(sa, sb);
 			updateret(ret, PA);
 		}
-		else if ((*sa)->v > (largest = getlargest(*sb)))
+		else if ((*sa)->v > (largest = getlargest(*sb)) && ordered(*sa))
 		{
 			while ((*sb)->v != largest)
 			{
@@ -299,7 +297,7 @@ void	mergetwo(t_stack **sa, t_stack **sb, int *count, t_out *ret)
 			fpa(sa, sb);
 			updateret(ret, PA);
 		}
-		else if ((*sb)->v < (*sa)->v && (*sb)->v > end->v)
+		else if ((*sb)->v < (*sa)->v && (*sb)->v < end->v)
 		{
 			frra(sa, sb);
 			updateret(ret, RRA);
