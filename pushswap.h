@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/22 14:06:08 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/22 14:40:32 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/23 09:23:03 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,18 @@ typedef struct	s_out
 	t_onum			num;
 	struct s_out	*nx;
 }				t_out;
-
+/*
+** DEBUG FUNCTIONS
+*/
+void			debug_pstacks(t_stack *stacka, t_stack *stackb);
+int				debug_ops(t_op *begin);
+/*
+** ALGORITHM FUNCTIONS
+*/
+void			stim(t_stack **sa, t_stack **sb, t_out *ret);
+/*
+** OTHER FUNCTIONS
+*/
 t_op			*opsinit();
 t_stack			*stackinit();
 t_op			*getoplist();
@@ -45,7 +56,6 @@ int				validnumbers(char **av);
 t_stack			*makestack(char **av);
 t_stack			*valinput(int ac, char **av, t_stack *stacka);
 int				notgetop(t_op *list, char *line);
-void			debug_pstacks(t_stack *stacka, t_stack *stackb);
 void			process_op(t_stack **stacka, t_stack **stackb, t_op *list);
 int				isrevordered(t_stack *stacka, t_stack *stackb);
 int				revordered(t_stack *stackb);
@@ -59,6 +69,14 @@ t_stack			*getend(t_stack **stack);
 int				aassigngroups(t_stack **stack);
 int				bassigngroups(t_stack **stack);
 int				getminrun(t_stack *stacka);
+/*
+** helper functions for return
+*/
+int				getlargest(t_stack *sb);
+int				getsmallest(t_stack *sb);
+void			updateretstack(t_out *ret, t_onum op, t_stack **sa, t_stack **sb);
+void			printret(t_out *ret);
+int				retnumber(t_out *ret);
 /*
 ** print out list from pushswap
 */

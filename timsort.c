@@ -5,11 +5,10 @@
 #include <sys/uio.h>
 #include <stdlib.h>
 #include <limits.h>
-//
-#include <stdio.h>
 
-/*
-void	mergestack(t_stack **sa, t_stack **sb, t_out *ret)
+#define SWAPTOPB ((*sb)->nx && (*sb)->v < ((*sb)->nx)->v)
+
+static void	mergestack(t_stack **sa, t_stack **sb, t_out *ret)
 {
 	t_stack *tmpb;
 	int		group;
@@ -19,7 +18,8 @@ void	mergestack(t_stack **sa, t_stack **sb, t_out *ret)
 
 	if (!(*sb))
 		return ;
-	if ((*sb)->nx && (*sb)->v < ((*sb)->nx)->v)
+	//if ((*sb)->nx && (*sb)->v < ((*sb)->nx)->v)
+	if (SWAPTOPB)
 	{
 		updateretstack(ret, SB, sa, sb);
 		if (bassigngroups(sb) == 1)
@@ -82,7 +82,7 @@ void	mergestack(t_stack **sa, t_stack **sb, t_out *ret)
 	bassigngroups(sb);
 }
 
-void	mergetwo(t_stack **sa, t_stack **sb, t_out *ret)
+static void	mergetwo(t_stack **sa, t_stack **sb, t_out *ret)
 {
 	int	smallest;
 	int largest;
@@ -115,7 +115,7 @@ void	mergetwo(t_stack **sa, t_stack **sb, t_out *ret)
 		updateretstack(ret, RA, sa, sb);
 }
 
-void	timdecision(t_stack **sa, t_stack **sb, t_stack *end, t_out *ret)
+static void	timdecision(t_stack **sa, t_stack **sb, t_stack *end, t_out *ret)
 {
 	if ((!(*sa)->nx) || ((*sa)->v < end->v && (*sa)->v < ((*sa)->nx)->v))
 	{
@@ -166,33 +166,6 @@ void	stim(t_stack **sa, t_stack **sb, t_out *ret)
 		}
 	}
 }
-*/
-
-int main(int ac, char **av)
-{
-	t_stack	*stacka;
-	t_stack *stackb;
-	t_out	*ret;
-
-	stacka = NULL;
-	stackb = NULL;
-	ret = outinit();
-	if (!(stacka = valinput(ac, av, stacka)))
-			return (0);
-	//SORTING ALGO
-	stim(&stacka, &stackb, ret);
-
-	//PRINT OPS AND OPS NUMBER OF OPS
-	//fprintf(stderr, "ret number is %d\n", retnumber(ret));
-	printret(ret);
-
-	//IMPLEMENT DEBUG -V -C -VC FUNCTION HERE TO PRINT IT OUT
-	return (0);
-}
-
-
-
-
 
 
 

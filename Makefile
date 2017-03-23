@@ -6,7 +6,7 @@
 #    By: mgould <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/02/22 11:22:29 by mgould            #+#    #+#              #
-#    Updated: 2017/03/22 14:39:01 by mgould           ###   ########.fr        #
+#    Updated: 2017/03/23 09:32:43 by mgould           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,12 @@ LIBA = /nfs/2016/m/mgould/thelibrary/libft.a
 
 CFLAGS = -Wall -Wextra -Werror -I $(LIB) -I .
 
-OBJCS = checker.o initstruct.o valinput.o debug.o fswap.o fpush.o frot.o \
-		frevrot.o valops.o
+OBJCS = debug.o checker.o initstruct.o valinput.o debug.o fswap.o fpush.o \
+		frot.o frevrot.o valops.o helpers.o
 
-OBJCS2 = push_swap.o valinput.o initstruct.o fswap.o fpush.o frot.o \
-		 frevrot.o valops.o ordercheck.o debug.o helpers.o initstructhelp.o
+OBJCS2 = debug.o push_swap.o valinput.o initstruct.o fswap.o fpush.o frot.o \
+		 frevrot.o valops.o ordercheck.o helpers.o initstructhelp.o \
+		 rethelp.o timsort.o
 
 all: $(NAME1) $(NAME2)
 
@@ -32,9 +33,9 @@ $(NAME1): $(OBJCS) $(LIBA)
 	gcc $(CFLAGS) -o $@ $^
 
 #make sure to remove this make clean!
+#make clean
 $(NAME2): $(OBJCS2) $(LIBA)
 	gcc $(CFLAGS) -o $@ $^
-	make clean
 
 
 $(LIBA):

@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:22:44 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/22 14:20:49 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/22 21:23:50 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,27 +53,27 @@ t_out	*outinit()
 void	printelement(t_optype num)
 {
 	if (num == sa)
-		ft_putstr("sa\n");
+		ft_putstr_fd("sa\n", 2);
 	else if (num == sb)
-		ft_putstr("sb\n");
+		ft_putstr_fd("sb\n", 2);
 	else if (num == ss)
-		ft_putstr("ss\n");
+		ft_putstr_fd("ss\n", 2);
 	else if (num == pa)
-		ft_putstr("pa\n");
+		ft_putstr_fd("pa\n", 2);
 	else if (num == pb)
-		ft_putstr("pb\n");
+		ft_putstr_fd("pb\n", 2);
 	else if (num == ra)
-		ft_putstr("ra\n");
+		ft_putstr_fd("ra\n", 2);
 	else if (num == rb)
-		ft_putstr("rb\n");
+		ft_putstr_fd("rb\n", 2);
 	else if (num == rr)
-		ft_putstr("rr\n");
+		ft_putstr_fd("rr\n", 2);
 	else if (num == rra)
-		ft_putstr("rra\n");
+		ft_putstr_fd("rra\n", 2);
 	else if (num == rrb)
-		ft_putstr("rrb\n");
+		ft_putstr_fd("rrb\n", 2);
 	else if (num == rrr)
-		ft_putstr("rrr\n");
+		ft_putstr_fd("rrr\n", 2);
 }
 
 void	printelement2(t_onum num)

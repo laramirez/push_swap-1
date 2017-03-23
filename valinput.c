@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:43:26 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/06 08:14:41 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/22 22:02:33 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,19 +95,21 @@ t_stack	*makestack(char **av)
 t_stack	*valinput(int ac, char **av, t_stack *stacka)
 {
 	int	len;
+	char **tmp;
 
+	tmp = av;
 	len = 0;
 	while (av[len])
 		len++;
 	if (ac < 2)
-	{
 		return (NULL);
-	}
-	if (!validnumbers(av))
+	if (!(ft_strcmp("-v", tmp[1])))
+		tmp++;
+	if (!validnumbers(tmp))
 	{
 		write(2, "Error\n", 6);
 		return (NULL);
 	}
-	stacka = makestack(av);
+	stacka = makestack(tmp);
 	return (stacka);
 }

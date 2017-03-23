@@ -35,6 +35,35 @@ int		notgetop(t_op *list, char *line)
 	return (0);
 }
 
+static int	openum(t_op *list, char *line)
+{
+	if (!(ft_strcmp(line, "sa")))
+		list->op = sa;
+	else if (!(ft_strcmp(line, "sb")))
+		list->op = sb;
+	else if (!(ft_strcmp(line, "ss")))
+		list->op = ss;
+	else if (!(ft_strcmp(line, "pa")))
+		list->op = pa;
+	else if (!(ft_strcmp(line, "pb")))
+		list->op = pb;
+	else if (!(ft_strcmp(line, "ra")))
+		list->op = ra;
+	else if (!(ft_strcmp(line, "rb")))
+		list->op = rb;
+	else if (!(ft_strcmp(line, "rr")))
+		list->op = rr;
+	else if (!(ft_strcmp(line, "rra")))
+		list->op = rra;
+	else if (!(ft_strcmp(line, "rrb")))
+		list->op = rrb;
+	else if (!(ft_strcmp(line, "rrr")))
+		list->op = rrr;
+	else
+		return (1);
+	return (0);
+}
+
 t_op	*getoplist(void)
 {
 	char	*line;
@@ -53,6 +82,7 @@ t_op	*getoplist(void)
 			write(2, "Error\n", 6);
 			exit(1);
 		}
+		openum(list, line);
 		list->next = opsinit();
 		prev = list;
 		list = list->next;
