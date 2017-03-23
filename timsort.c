@@ -8,6 +8,35 @@
 
 #define SWAPTOPB ((*sb)->nx && (*sb)->v < ((*sb)->nx)->v)
 
+static void	rotcor(t_out *ret, t_stack **sa, t_stack **sb, int descending)
+{
+	int tmp;
+
+	tmp = 0;
+	if (descending)
+	{
+		tmp = getlargest(*sb);
+		if (wheredest(*sb))
+			while ((*sb)->v != tmp)
+				updateretstack(ret, RB, sa, sb);
+		else
+			while ((*sb)->v != tmp)
+				updateretstack(ret, RRB, sa, sb);
+		bassigngroups(sb);
+	}
+	else
+	{
+		tmp = getsmallest(*sa);
+		if (wheredest(*sa))
+			while ((*sa)->v != tmp)
+				updateretstack(ret, RA, sa, sb);
+		else
+			while ((*sa)->v != tmp)
+				updateretstack(ret, RRA, sa, sb);
+		aassigngroups(sa);
+	}
+}
+
 static void	mergestack(t_stack **sa, t_stack **sb, t_out *ret)
 {
 	t_stack *tmpb;
@@ -18,7 +47,6 @@ static void	mergestack(t_stack **sa, t_stack **sb, t_out *ret)
 
 	if (!(*sb))
 		return ;
-	//if ((*sb)->nx && (*sb)->v < ((*sb)->nx)->v)
 	if (SWAPTOPB)
 	{
 		updateretstack(ret, SB, sa, sb);
@@ -74,11 +102,7 @@ static void	mergestack(t_stack **sa, t_stack **sb, t_out *ret)
 			updateretstack(ret, PB, sa, sb);
 		}
 	}
-	largest = getlargest(*sb);
-	while ((*sb)->v != largest)
-	{
-		updateretstack(ret, RB, sa, sb);
-	}
+	rotcor(ret, sa, sb, 1);
 	bassigngroups(sb);
 }
 
@@ -111,8 +135,35 @@ static void	mergetwo(t_stack **sa, t_stack **sb, t_out *ret)
 			updateretstack(ret, RRA, sa, sb);
 	}
 	smallest = getsmallest(*sa);
-	while ((*sa)->v != smallest)
-		updateretstack(ret, RA, sa, sb);
+	rotcor(ret, sa, sb, 0);
+}
+
+int	similarsizegroup(t_stack *sb)
+{
+	int i;
+	int j;
+	t_stack *tmp;
+
+	tmp = sb;
+	i = 0;
+	j = 0;
+	//ft_putstr_fd("you are here\n", 2);
+	while (tmp && tmp->g == -1)
+	{
+	//	ft_putstr_fd("you are here\n", 2);
+		i++;
+		tmp = tmp->nx;
+	}
+	while (tmp && tmp->g == -2)
+	{
+	//	ft_putstr_fd("second\n", 2);
+		j++;
+		tmp = tmp->nx;
+	}
+	//ft_putstr_fd("third\n", 2);
+	if (i > (j / 2) || j < 16)
+		return (1);
+	return (0);
 }
 
 static void	timdecision(t_stack **sa, t_stack **sb, t_stack *end, t_out *ret)
@@ -120,7 +171,14 @@ static void	timdecision(t_stack **sa, t_stack **sb, t_stack *end, t_out *ret)
 	if ((!(*sa)->nx) || ((*sa)->v < end->v && (*sa)->v < ((*sa)->nx)->v))
 	{
 		if ((*sb) && ((*sa)->v < (*sb)->v) && (bassigngroups(sb) > 1))
-			mergestack(sa, sb, ret);
+		{
+			if (similarsizegroup(*sb))
+				mergestack(sa, sb, ret);
+			//ft_putstr_fd("foruth\n", 2);
+			//mergestack(sa, sb, ret);
+		//	ft_putstr_fd("fifth\n", 2);
+
+		}
 		updateretstack(ret, PB, sa, sb);
 	}
 	else if (((*sa)->nx)->v < (*sa)->v)

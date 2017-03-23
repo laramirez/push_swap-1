@@ -22,6 +22,29 @@ int		getlargest(t_stack *sb)
 	return (largest);
 }
 
+int		wheredest(t_stack *sb)
+{
+	int		largest;
+	t_stack	*tmp;
+	int		loc;
+	int		i;
+
+	tmp = sb;
+	largest = tmp->v;
+	loc = 0;
+	i = 0;
+	while (tmp)
+	{
+		i++;
+		if (largest < tmp->v)
+		{
+			largest = tmp->v;
+			loc = i;
+		}
+		tmp = tmp->nx;
+	}
+	return (loc < (i / 2) ? 1 : 0);
+}
 
 int		getsmallest(t_stack *sb)
 {

@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/22 14:06:08 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/23 09:23:03 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/23 10:25:50 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,12 @@ typedef struct	s_out
 void			debug_pstacks(t_stack *stacka, t_stack *stackb);
 int				debug_ops(t_op *begin);
 /*
+** HELPER FUNCTIONS FOR SORT
+*/
+int				getlargest(t_stack *sb);
+int				wheredest(t_stack *sb);
+int				getsmallest(t_stack *sb);
+/*
 ** ALGORITHM FUNCTIONS
 */
 void			stim(t_stack **sa, t_stack **sb, t_out *ret);
@@ -69,11 +75,10 @@ t_stack			*getend(t_stack **stack);
 int				aassigngroups(t_stack **stack);
 int				bassigngroups(t_stack **stack);
 int				getminrun(t_stack *stacka);
+
 /*
 ** helper functions for return
 */
-int				getlargest(t_stack *sb);
-int				getsmallest(t_stack *sb);
 void			updateretstack(t_out *ret, t_onum op, t_stack **sa, t_stack **sb);
 void			printret(t_out *ret);
 int				retnumber(t_out *ret);
