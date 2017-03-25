@@ -16,7 +16,7 @@ static void	rotcor(t_out *ret, t_stack **sa, t_stack **sb, int descending)
 	if (descending)
 	{
 		tmp = getlargest(*sb);
-		if (wheredest(*sb))
+		if (wheredest(*sb) > 0)
 			while ((*sb)->v != tmp)
 				updateretstack(ret, RB, sa, sb);
 		else
@@ -27,7 +27,7 @@ static void	rotcor(t_out *ret, t_stack **sa, t_stack **sb, int descending)
 	else
 	{
 		tmp = getsmallest(*sa);
-		if (wheredest(*sa))
+		if (wheredest(*sa) > 0)
 			while ((*sa)->v != tmp)
 				updateretstack(ret, RA, sa, sb);
 		else

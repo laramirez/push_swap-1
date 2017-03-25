@@ -20,8 +20,8 @@ int main(int ac, char **av)
 	if (!(stacka = valinput(ac, av, stacka)))
 			return (0);
 	//SORTING ALGO
-	stim(&stacka, &stackb, ret);
-
+	//stim(&stacka, &stackb, ret);
+	fortysort(&stacka, &stackb, ret);
 	//PRINT OPS AND OPS NUMBER OF OPS
 	//fprintf(stderr, "ret number is %d\n", retnumber(ret));
 	printret(ret);

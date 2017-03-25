@@ -43,7 +43,7 @@ int		wheredest(t_stack *sb)
 		}
 		tmp = tmp->nx;
 	}
-	return (loc < (i / 2) ? 1 : 0);
+	return (loc < (i / 2) ? loc : (((i+ 1) - loc) * -1));
 }
 
 int		getsmallest(t_stack *sb)

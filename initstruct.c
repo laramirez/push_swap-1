@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 10:22:44 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/22 21:23:50 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/23 22:16:08 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,12 @@ t_stack	*stackinit(void)
 	stack->pv = NULL;
 	stack->nx = NULL;
 	stack->g = 0;
+	stack->maf = 0;
+	stack->mar = 0;
+	stack->mbf = 0;
+	stack->mbr = 0;
+	stack->moves = 0;
+	stack->dir = 0;
 	return (stack);
 }
 

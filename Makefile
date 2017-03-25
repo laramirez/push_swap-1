@@ -6,7 +6,7 @@
 #    By: mgould <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/02/22 11:22:29 by mgould            #+#    #+#              #
-#    Updated: 2017/03/23 09:32:43 by mgould           ###   ########.fr        #
+#    Updated: 2017/03/23 21:31:34 by mgould           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ OBJCS = debug.o checker.o initstruct.o valinput.o debug.o fswap.o fpush.o \
 
 OBJCS2 = debug.o push_swap.o valinput.o initstruct.o fswap.o fpush.o frot.o \
 		 frevrot.o valops.o ordercheck.o helpers.o initstructhelp.o \
-		 rethelp.o timsort.o
+		 rethelp.o timsort.o fortysort.o
 
 all: $(NAME1) $(NAME2)
 

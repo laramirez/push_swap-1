@@ -91,6 +91,7 @@ int	bassigngroups(t_stack **stack)
 	return (i * -1);
 }
 
+/*
 int getminrun(t_stack *stacka)
 {
 	int i;
@@ -112,3 +113,4 @@ int getminrun(t_stack *stacka)
 	}
 	return (ret);
 }
+*/

@@ -6,7 +6,7 @@
 /*   By: mgould <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/22 14:06:08 by mgould            #+#    #+#             */
-/*   Updated: 2017/03/23 10:25:50 by mgould           ###   ########.fr       */
+/*   Updated: 2017/03/23 22:07:29 by mgould           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,12 @@ typedef struct	s_stack
 	struct s_stack	*pv;
 	struct s_stack	*nx;
 	int				g;
+	int				maf;
+	int				mar;
+	int				mbf;
+	int				mbr;
+	int				moves;
+	int				dir;
 }				t_stack;
 
 typedef struct	s_op
@@ -52,6 +58,7 @@ int				getsmallest(t_stack *sb);
 ** ALGORITHM FUNCTIONS
 */
 void			stim(t_stack **sa, t_stack **sb, t_out *ret);
+void			fortysort(t_stack **sa, t_stack **sb, t_out *ret);
 /*
 ** OTHER FUNCTIONS
 */
