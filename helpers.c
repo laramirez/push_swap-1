@@ -90,27 +90,3 @@ int	bassigngroups(t_stack **stack)
 	}
 	return (i * -1);
 }
-
-/*
-int getminrun(t_stack *stacka)
-{
-	int i;
-	int ret;
-
-	ret = 0;
-	//set the minimum lower boundary here, currently at 16
-	i = 16;
-	ret = stacklen(stacka);
-	if (ret < 65)
-	{
-		if (ret < i && ret > 1)
-			ret = i;
-	}
-	else
-	{
-		while ((ret = (ret / i)) > 64)
-			i *= 2;
-	}
-	return (ret);
-}
-*/

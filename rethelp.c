@@ -46,6 +46,8 @@ int		wheredest(t_stack *sb)
 	return (loc < (i / 2) ? loc : (((i+ 1) - loc) * -1));
 }
 
+
+
 int		getsmallest(t_stack *sb)
 {
 	int		smallest;
