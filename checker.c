@@ -15,11 +15,11 @@ void	processops(t_stack **stacka, t_stack **stackb, t_op *oplist, int debug)
 	begin = oplist;
 	if (!(begin->fp))
 		return ;
-	if (1)//debug > 0)
+	if (debug > 0)
 	{
 		ft_putstr_fd("YOU ARE IN DEBUG MODE\n", 2);
 		debug_ops(oplist);
-		debug_pstacks(*stacka, *stackb);
+	//	debug_pstacks(*stacka, *stackb);
 	}
 	while (begin)
 	{

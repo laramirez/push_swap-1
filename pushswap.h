@@ -88,6 +88,7 @@ int				getminrun(t_stack *stacka);
 ** helper functions for return
 */
 void			updateretstack(t_out *ret, t_onum op, t_stack **sa, t_stack **sb);
+void			updateretstackrev(t_out *ret, t_onum op, t_stack **sa, t_stack **sb);
 void			printret(t_out *ret);
 int				retnumber(t_out *ret);
 /*
@@ -97,6 +98,7 @@ void			printoutlist(t_out *outlist);
 void			printelement(t_optype num);
 void			printelement2(t_onum num);
 void			doop(t_onum num, t_stack **sa, t_stack **sb);
+void			dooprev(t_onum num, t_stack **sa, t_stack **sb);
 /*
 ** operation functions
 */

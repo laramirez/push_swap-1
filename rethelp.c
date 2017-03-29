@@ -64,6 +64,20 @@ int		getsmallest(t_stack *sb)
 	return (smallest);
 }
 
+void	updateretstackrev(t_out *ret, t_onum op, t_stack **sa, t_stack **sb)
+{
+	t_out *tmp;
+
+	tmp = ret;
+	while (tmp->nx)
+		tmp = tmp->nx;
+	tmp->num = op;
+	tmp->nx = outinit();
+	dooprev(op, sa, sb);
+}
+
+
+
 void	updateretstack(t_out *ret, t_onum op, t_stack **sa, t_stack **sb)
 {
 	t_out *tmp;
