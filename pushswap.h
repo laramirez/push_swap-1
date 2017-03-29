@@ -73,6 +73,7 @@ void			process_op(t_stack **stacka, t_stack **stackb, t_op *list);
 int				isrevordered(t_stack *stacka, t_stack *stackb);
 int				revordered(t_stack *stackb);
 int				ordered(t_stack *stackb);
+int				almostordered(t_stack *stackb);
 t_out			*outinit();
 /*
 ** helper functions

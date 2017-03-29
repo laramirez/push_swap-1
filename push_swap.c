@@ -14,6 +14,7 @@ int main(int ac, char **av)
 	t_stack *stackb;
 	t_out	*ret;
 
+	sleep(1);
 	stacka = NULL;
 	stackb = NULL;
 	ret = outinit();
