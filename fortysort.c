@@ -123,9 +123,10 @@ void	bstructmoves(t_stack *sa, t_stack *sb)
 	}
 }
 
+//above here calculates moves for a and b
 
-
-void	movedir(t_stack *sa)
+/*
+void	movedirold(t_stack *sa)
 {
 	int forward;
 	int reverse;
@@ -142,65 +143,149 @@ void	movedir(t_stack *sa)
 		sa = sa->nx;
 	}
 }
+*/
 
-
-
-void	insertbest(t_stack **sa, t_stack **sb, t_out *ret)
+void	movedir(t_stack *sa)
 {
-	t_stack *tmp;
-	int	moves;
-	int dir;
-	int b;
-	int a;
+	int bothforward;
+	int bothreverse;
+	int afbr;
+	int arbf;
 
-	tmp = *sa;
-	moves = tmp->moves;
-	dir = tmp->dir;
-	b = (dir < 0 ? tmp->mbr : tmp->mbf);
-	a = (dir < 0 ? tmp->mar : tmp->maf);
-	while (tmp)
+	while (sa)
 	{
-		if (tmp->moves < moves)
-		{
-			moves = tmp->moves;
-			dir = tmp->dir;
-			b = (dir < 0 ? tmp->mbr : tmp->mbf);
-			a = (dir < 0 ? tmp->mar : tmp->maf);
-		}
+		bothforward = ((sa->maf > sa->mbf) ? sa->maf : sa->mbf);
+		bothreverse = ((sa->mar > sa->mbr) ? sa->mar : sa->mbr);
+		afbr = sa->maf + sa->mbr;
+		arbf = sa->mar + sa->mbf;
 
-		tmp = tmp->nx;
+		if (bothforward <= bothreverse && bothforward <= afbr &&
+			   bothforward <= arbf)
+		{
+			sa->moves = bothforward;
+			sa->dir = 1;
+		}
+		else if (bothreverse <= bothforward && bothreverse <= afbr &&
+			   bothreverse <= arbf)
+		{
+			sa->moves = bothreverse;
+			sa->dir = 2;
+		}
+		else if (afbr <= bothforward && afbr <= bothreverse &&
+			   afbr <= arbf)
+		{
+			sa->moves = afbr;
+			sa->dir = 3;
+		}
+		else if (arbf <= bothreverse && arbf <= bothforward &&
+			   arbf <= afbr)
+		{
+			sa->moves = arbf;
+			sa->dir = 4;
+		}
+		sa = sa->nx;
 	}
-	//SEPERATE THSI FUNCITON
-	//function here to rotate the stack pre-pop
-	//fprintf(stderr, "dir:%d, b:%d, a:%d, moves:%d\n", dir, b, a, moves);
+}
+
+void	prepoprot(t_stack *target, t_stack **sa, t_stack **sb, t_out *ret)
+{
+	int moves;
+	int a;
+	int b;
+
+	moves = target->moves;
+
 	while (moves)
 	{
-		if (dir < 0)
+		if (target->dir == 1)
 		{
-			if (b > 0 & a > 0)
-				updateretstack(ret, RRR, sa, sb);
-			else if (b > 0)
-				updateretstack(ret, RRB, sa, sb);
-			else if (a > 0)
-				updateretstack(ret, RRA, sa, sb);
-		}
-		else if (dir > 0)
-		{
+			a = target->maf;
+			b = target->mbf;
 			if (b > 0 & a > 0)
 				updateretstack(ret, RR, sa, sb);
 			else if (b > 0)
 				updateretstack(ret, RB, sa, sb);
 			else if (a > 0)
 				updateretstack(ret, RA, sa, sb);
+			target->maf -= 1;
+			target->mbf -= 1;
+		}
+		else if (target->dir == 2)
+		{
+			a = target->mar;
+			b = target->mbr;
+			if (b > 0 & a > 0)
+				updateretstack(ret, RRR, sa, sb);
+			else if (b > 0)
+				updateretstack(ret, RRB, sa, sb);
+			else if (a > 0)
+				updateretstack(ret, RRA, sa, sb);
+			target->mar -= 1;
+			target->mbr -= 1;
+		}
+		else if (target->dir == 3)
+		{
+			a = target->maf;
+			b = target->mbr;
+			if (b > 0 & a > 0)
+			{
+				updateretstack(ret, RA, sa, sb);
+				updateretstack(ret, RRB, sa, sb);
+			}
+			else if (b > 0)
+				updateretstack(ret, RRB, sa, sb);
+			else if (a > 0)
+				updateretstack(ret, RA, sa, sb);
+			target->maf -= 1;
+			target->mbr -= 1;
+		}
+		else if (target->dir == 4)
+		{
+			a = target->mar;
+			b = target->mbf;
+			if (b > 0 & a > 0)
+			{
+				updateretstack(ret, RRA, sa, sb);
+				updateretstack(ret, RB, sa, sb);
+			}
+			else if (b > 0)
+				updateretstack(ret, RB, sa, sb);
+			else if (a > 0)
+				updateretstack(ret, RRA, sa, sb);
+			target->mar -= 1;
+			target->mbf -= 1;
 		}
 		if (ordered(*sa))
 			return ;
-		a--;
-		b--;
 		moves--;
 		//fprintf(stderr, "after insert best decision iteration\n");
 		//debug_pstacks(*sa, *sb);
 	}
+
+
+}
+
+void	insertbest(t_stack **sa, t_stack **sb, t_out *ret)
+{
+	t_stack *tmp;
+	t_stack *target;
+	int moves;
+
+	//get t_stack taht has the minimum number of moves
+	tmp = *sa;
+	target = tmp;
+	moves = tmp->moves;
+	while (tmp)
+	{
+		if (tmp->moves < moves)
+		{
+			moves = tmp->moves;
+			target = tmp;
+		}
+		tmp = tmp->nx;
+	}
+
+	prepoprot(target, sa, sb, ret);
 	updateretstack(ret, PB, sa, sb);
 }
 
@@ -319,4 +404,63 @@ void	fortysort(t_stack **sa, t_stack **sb, t_out *ret)
 	}
 }
 
+/*
+void	insertbestworks(t_stack **sa, t_stack **sb, t_out *ret)
+{
+	t_stack *tmp;
+	int	moves;
+	int dir;
+	int b;
+	int a;
 
+	tmp = *sa;
+	moves = tmp->moves;
+	dir = tmp->dir;
+	b = (dir < 0 ? tmp->mbr : tmp->mbf);
+	a = (dir < 0 ? tmp->mar : tmp->maf);
+	while (tmp)
+	{
+		if (tmp->moves < moves)
+		{
+			moves = tmp->moves;
+			dir = tmp->dir;
+			b = (dir < 0 ? tmp->mbr : tmp->mbf);
+			a = (dir < 0 ? tmp->mar : tmp->maf);
+		}
+
+		tmp = tmp->nx;
+	}
+	//SEPERATE THSI FUNCITON
+	//function here to rotate the stack pre-pop
+	//fprintf(stderr, "dir:%d, b:%d, a:%d, moves:%d\n", dir, b, a, moves);
+	while (moves)
+	{
+		if (dir < 0)
+		{
+			if (b > 0 & a > 0)
+				updateretstack(ret, RRR, sa, sb);
+			else if (b > 0)
+				updateretstack(ret, RRB, sa, sb);
+			else if (a > 0)
+				updateretstack(ret, RRA, sa, sb);
+		}
+		else if (dir > 0)
+		{
+			if (b > 0 & a > 0)
+				updateretstack(ret, RR, sa, sb);
+			else if (b > 0)
+				updateretstack(ret, RB, sa, sb);
+			else if (a > 0)
+				updateretstack(ret, RA, sa, sb);
+		}
+		if (ordered(*sa))
+			return ;
+		a--;
+		b--;
+		moves--;
+		//fprintf(stderr, "after insert best decision iteration\n");
+		//debug_pstacks(*sa, *sb);
+	}
+	updateretstack(ret, PB, sa, sb);
+}
+*/
