@@ -105,7 +105,7 @@ void	bstructmoves(t_stack *sa, t_stack *sb)
 			}
 			else if (sa->v > (getend(&tmpb)->v) && sa->v > tmpb->v)
 			{
-				i++;
+				//i++;
 				while (sa->v > tmpb->v)
 				{
 					i++;
@@ -127,6 +127,8 @@ void	bstructmoves(t_stack *sa, t_stack *sb)
 			}
 			else
 			{
+				//if (sa->v < tmpb->v)
+				//	i++;
 				while (sa->v < tmpb->v )
 				{
 					i++;
@@ -134,7 +136,8 @@ void	bstructmoves(t_stack *sa, t_stack *sb)
 				}
 			}
 			sa->mbf = i;
-			sa->mbr = (stacklen(sb) + 1) - i;
+			sa->mbr = (stacklen(sb)) - i;
+			//sa->mbr = (stacklen(sb) + 1) - i;
 		}
 		sa = sa->nx;
 	}
@@ -186,19 +189,11 @@ void	bstructmovesrev(t_stack *sa, t_stack *sb)
 			}
 			else if (sa->v > (getend(&tmpb)->v) && sa->v > tmpb->v)
 			{
-				//i--;
 				while (sa->v > tmpb->v)
 				{
 					i++;
 					tmpb = tmpb->nx;
 				}
-				/*
-				while (sa->v < tmpb->v)
-				{
-					i++;
-					tmpb = tmpb->nx;
-				}
-				*/
 				//fprintf(stderr, "in the bigger than end condition\n");
 			}
 			else if (sa->v < (getend(&tmpb)->v) && sa->v < tmpb->v)
@@ -309,6 +304,10 @@ void	insertbest(t_stack **sa, t_stack **sb, t_out *ret)
 	}
 	updateretstack(ret, PB, sa, sb);
 	//fprintf(stderr, "after insert best pop to b\n");
+	//this may all be unnecessary
+	astructmoves(*sa);
+	bstructmoves(*sa, *sb);
+	movedir(*sa);
 	//debug_pstacks(*sa, *sb);
 }
 
@@ -372,6 +371,35 @@ void	insertbestrev(t_stack **sa, t_stack **sb, t_out *ret)
 	//debug_pstacks(*sa, *sb);
 }
 
+
+
+void	mergetwo(t_stack **sa, t_stack **sb, t_out *ret)
+{
+	while (*sb)
+	{
+		if ((*sb)->v > getlargest(*sa))
+		{
+			rotcor(ret, sa, sb, 0);
+			//while (getend(sa)->v != (getlargest(*sa)))
+			//	updateretstack(ret, RA, sa, sb);
+			updateretstack(ret, PA, sa, sb);
+		}
+		else if ((*sb)->v < getsmallest(*sa))
+		{
+			rotcor(ret, sa, sb, 0);
+		//	while ((*sa)->v != (getsmallest(*sa)))
+		//		updateretstack(ret, RRA, sa, sb);
+			updateretstack(ret, PA, sa, sb);
+		}
+		else if ((*sb)->v > (*sa)->v && (!(((*sb)->v) > getlargest(*sa))))
+			updateretstack(ret, RA, sa, sb);
+		else if ((*sb)->v < (*sa)->v && (*sb)->v > (getend(sa))->v)
+			updateretstack(ret, PA, sa, sb);
+		else
+			updateretstack(ret, RRA, sa, sb);
+	}
+}
+
 int	threesort(t_stack **sa, t_stack **sb, t_out *ret)
 {
 
@@ -389,6 +417,40 @@ int	threesort(t_stack **sa, t_stack **sb, t_out *ret)
 	return (1);
 }
 
+//can pick the direction on numsort to make it a bit faster
+
+int numsort(t_stack **sa, t_stack **sb, t_out *ret)
+{
+	int i;
+	int num;
+
+	i = 0;
+	num = 4;
+	if (stacklen(*sa) != num)
+		return (0);
+	//fprintf(stderr, "Before 4 sort:\n\n");
+	//debug_pstacks(*sa, *sb);
+	while (i < (num - 3))
+	{
+		rotcor(ret, sa, sb, 0);
+		updateretstack(ret, PB, sa, sb);
+		i++;
+	}
+	//fprintf(stderr, "Before 3 sort:\n\n");
+	//debug_pstacks(*sa, *sb);
+	threesort(sa, sb, ret);
+	i = 0;
+	while (i < (num - 3))
+	{
+		rotcor(ret, sa, sb, 0);
+		updateretstack(ret, PA, sa, sb);
+		i++;
+	}
+
+	return (1);
+}
+
+
 void	fortysort(t_stack **sa, t_stack **sb, t_out *ret)
 {
 	int i;
@@ -397,6 +459,8 @@ void	fortysort(t_stack **sa, t_stack **sb, t_out *ret)
 	i = 0;
 	if (aassigngroups(sa) == 1)
 		return ;
+	//fprintf(stderr, "BEGIN:\n\n");
+	//debug_pstacks(*sa, *sb);
 	while (*sa)
 	{
 		astructmoves(*sa);
@@ -404,29 +468,30 @@ void	fortysort(t_stack **sa, t_stack **sb, t_out *ret)
 		movedir(*sa);
 		insertbest(sa, sb, ret);
 
-		if (threesort(sa, sb, ret) || almostordered(*sa))
+		if (numsort(sa, sb, ret) || almostordered(*sa))
 		{
+			rotcor(ret, sa, sb, 0);
 			//fprintf(stderr, "BEGIN 2nd PART: ALMOST ORDERED LOOKS LIKE:\n\n");
 			//debug_pstacks(*sa, *sb);
 
 			//fprintf(stderr, "\n\n");
 
+			//THIS COMPLICATED MERGE WORKS BETTER, LOL :-(
+			//DOING A SIMPLE MERGE INSTEAD OF A COMPLICATED MERG B/C ITS SORTED
+			/*
 			while (*sb)
 			{
 				astructmoves(*sb);
 				bstructmovesrev(*sb, *sa);
 				movedir(*sb);
-				//fprintf(stderr, "REV BSTRUCT MOVES:\n\n");
-				//debug_pstacks(*sb, *sa);
 				insertbestrev(sb, sa, ret);
 			}
+			*/
 
-			//fprintf(stderr, "after merge loop looks like:\n\n");
-			//debug_pstacks(*sa, *sb);
 			//MERGETWO SOLUTION
-			//mergetwo(sa, sb, ret);
+			mergetwo(sa, sb, ret);
 			rotcor(ret, sa, sb, 0);
-			//fprintf(stderr, "after rot cor looks like:\n\n");
+			//fprintf(stderr, "AT END:\n\n");
 			//debug_pstacks(*sa, *sb);
 			break;
 		}
@@ -434,59 +499,3 @@ void	fortysort(t_stack **sa, t_stack **sb, t_out *ret)
 }
 
 
-
-
-
-//ADD IN LESS THAN 3 ODERING OP
-
-
-
-
-
-
-
-	//find the lowest value in stack A
-	//execute it's moves in the proper direction for each stack
-	//check if sorted along the way if possible
-
-/*
-*/
-
-/*
-static int	fortydecision(t_stack **sa, t_stack **sb, t_stack *end, t_out *ret)
-{
-	debug_pstacks(*sa, *sb);
-	if((*sb) && (*sb)->v < ((getend(sb))->v))
-		updateretstack(ret, RB, sa, sb);
-	else if((*sb) && (*sb)->nx && (*sb)->v < ((*sb)->nx)->v)
-		updateretstack(ret, SB, sa, sb);
-
-	if ((!(*sa)->nx) || ((*sa)->v < end->v && (*sa)->v < ((*sa)->nx)->v))
-	{
-		return (1);
-
-		if ((*sb) && ((*sa)->v < (*sb)->v))
-		{
-			return (1);
-		}
-		fprintf(stderr, "push b from fortydecision\n");
-		updateretstack(ret, PB, sa, sb);
-
-	}
-	else if (((*sa)->nx)->v < (*sa)->v)
-	{
-		updateretstack(ret, SA, sa, sb);
-	}
-	else if (((*sa)->nx)->v <= (end)->v && ((*sa)->nx)->v < (*sa)->v)
-	{
-		updateretstack(ret, SA, sa, sb);
-	}
-	else if ((((stacklen(*sa) == 1) && (end->v < (*sa)->v))) ||
-			(end->v < (*sa)->v && (end)->v <= ((*sa)->nx)->v))
-	{
-		updateretstack(ret, RRA, sa, sb);
-	}
-
-	return (0);
-}
-*/
