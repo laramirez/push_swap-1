@@ -95,7 +95,8 @@ void	fortysort(t_stack **sa, t_stack **sb, t_out *ret)
 	int i;
 	int len;
 
-	if (aassigngroups(sa) == 1)
+	//if (aassigngroups(sa) == 1)
+	if (ordered(*sa) == 1)
 		return ;
 	i = 0;
 	len = 3;

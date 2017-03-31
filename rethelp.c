@@ -46,7 +46,6 @@ int		wheredest(t_stack *sb)
 	return (loc < (i / 2) ? loc : (((i+ 1) - loc) * -1));
 }
 
-
 int		wheredestj(t_stack *sb, int j)
 {
 	int		goal;
@@ -67,83 +66,5 @@ int		wheredestj(t_stack *sb, int j)
 		tmp = tmp->nx;
 		i++;
 	}
-	//fprintf(stderr, "wheredest i is:%d loc is:%d\n", i, loc);
 	return (loc <= (i / 2) ? 1 : -1);
-}
-
-
-
-
-
-int		getsmallest(t_stack *sb)
-{
-	int		smallest;
-	t_stack	*tmp;
-
-	tmp = sb;
-	smallest = tmp->v;
-	while (tmp)
-	{
-		if (smallest > tmp->v)
-			smallest = tmp->v;
-		tmp = tmp->nx;
-	}
-	return (smallest);
-}
-
-void	updateretstackrev(t_out *ret, t_onum op, t_stack **sa, t_stack **sb)
-{
-	t_out *tmp;
-
-	tmp = ret;
-	while (tmp->nx)
-		tmp = tmp->nx;
-	tmp->num = op;
-	tmp->nx = outinit();
-	dooprev(op, sa, sb);
-}
-
-
-
-void	updateretstack(t_out *ret, t_onum op, t_stack **sa, t_stack **sb)
-{
-	t_out *tmp;
-
-	tmp = ret;
-	while (tmp->nx)
-		tmp = tmp->nx;
-	tmp->num = op;
-	tmp->nx = outinit();
-	doop(op, sa, sb);
-}
-
-void	printret(t_out *ret)
-{
-	int i;
-
-	i = 0;
-	while (ret)
-	{
-		if (ret->num == NOTHING)
-		{
-			printelement2(ret->num);
-			break;
-		}
-		printelement2(ret->num);
-		ret = ret->nx;
-		i++;
-	}
-}
-
-int	retnumber(t_out *ret)
-{
-	int i;
-
-	i = 0;
-	while (ret->num != NOTHING)
-	{
-		i++;
-		ret = ret->nx;
-	}
-	return (i);
 }

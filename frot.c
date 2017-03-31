@@ -5,8 +5,6 @@
 #include <sys/uio.h>
 #include <stdlib.h>
 #include <limits.h>
-//
-#include <stdio.h>
 
 void	fra(t_stack **stacka, t_stack **stackb)
 {

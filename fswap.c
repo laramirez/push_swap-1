@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <limits.h>
 
-
 void	fsa(t_stack **stacka, t_stack **stackb)
 {
 	t_stack *tmpa;
@@ -21,12 +20,6 @@ void	fsa(t_stack **stacka, t_stack **stackb)
 		tmpa->pv = (*stacka);
 		(*stacka)->nx = tmpa;
 		(*stacka)->pv = NULL;
-
-		//tmpa->pv = NULL;
-		//(*stacka)->nx = tmpa->nx;
-		//(*stacka)->pv = tmpa;
-		//*stacka = tmpa;
-		//tmpa->nx = (*stacka);
 	}
 	tmpa = *stacka;
 	while (tmpa->nx)
@@ -50,23 +43,13 @@ void	fsb(t_stack **stacka, t_stack **stackb)
 		tmpb->pv = (*stackb);
 		(*stackb)->nx = tmpb;
 		(*stackb)->pv = NULL;
-
-		/*
-		tmpb = (*stackb)->nx;
-		(*stackb)->nx = tmpb->nx;
-		tmpb->nx = (*stackb);
-		*stackb = tmpb;
-		*/
 	}
-
 	tmpb = *stackb;
 	while (tmpb->nx)
 	{
 		(tmpb->nx)->pv = tmpb;
 		tmpb = tmpb->nx;
 	}
-
-
 }
 
 void	fss(t_stack **stacka, t_stack **stackb)

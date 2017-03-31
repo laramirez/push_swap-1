@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <limits.h>
 
-
 void	fpb(t_stack **stacka, t_stack **stackb)
 {
 	t_stack *tmp;

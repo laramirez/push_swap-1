@@ -107,5 +107,5 @@ void	printelement2(t_onum num)
 	else if (num == RRR)
 		ft_putstr("rrr\n");
 	else if (num == NOTHING)
-		ft_putstr("");
+		ft_putstr("\n");
 }

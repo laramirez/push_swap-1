@@ -5,8 +5,6 @@
 #include <sys/uio.h>
 #include <stdlib.h>
 #include <limits.h>
-//
-#include <stdio.h>
 
 void	frra(t_stack **stacka, t_stack **stackb)
 {
@@ -45,13 +43,6 @@ void	frrb(t_stack **stacka, t_stack **stackb)
 		(*stackb)->pv = tmpb;
 		(*stackb) = tmpb;
 		(*stackb)->pv = NULL;
-
-		/*
-		(tmpb->pv)->nx = NULL;
-		(*stackb)->pv = tmpb;
-		tmpb->nx = *stackb;
-		*stackb = tmpb;
-		*/
 	}
 }
 

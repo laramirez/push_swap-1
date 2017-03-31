@@ -17,8 +17,6 @@
 #include <sys/uio.h>
 #include <stdlib.h>
 #include <limits.h>
-//
-#include <stdio.h>
 
 int		validnumbers(char **av)
 {
@@ -140,7 +138,3 @@ t_stack	*valinput(int ac, char **av, t_stack *stacka)
 	}
 	return (stacka);
 }
-
-
-
-

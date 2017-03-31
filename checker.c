@@ -5,8 +5,6 @@
 #include <sys/uio.h>
 #include <stdlib.h>
 #include <limits.h>
-//
-#include <stdio.h>
 
 void	processops(t_stack **stacka, t_stack **stackb, t_op *oplist, int debug)
 {
@@ -19,7 +17,7 @@ void	processops(t_stack **stacka, t_stack **stackb, t_op *oplist, int debug)
 	{
 		ft_putstr_fd("YOU ARE IN DEBUG MODE\n", 2);
 		debug_ops(oplist);
-	//	debug_pstacks(*stacka, *stackb);
+		debug_pstacks(*stacka, *stackb);
 	}
 	while (begin)
 	{
@@ -68,10 +66,8 @@ int main(int ac, char **av)
 	if (!(stacka = valinput(ac, av, stacka)))
 			return (0);
 	oplist = getoplist();
-	//TOGGLE DEBUG WITH  !, ! means looks for -v arg
 	if (!(ft_strcmp("-v", av[1])))
 		tmp = 1;
-	// CHECK FOR VALID ORDER
 	processops(&stacka, &stackb, oplist, tmp);
 	if ((tmp = isordered(stacka, stackb)))
 	{

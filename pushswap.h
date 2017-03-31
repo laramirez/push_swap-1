@@ -63,7 +63,6 @@ void			prepoprot(t_stack *target, t_stack **sa, t_stack **sb, t_out *ret);
 /*
 ** ALGORITHM FUNCTIONS
 */
-void			stim(t_stack **sa, t_stack **sb, t_out *ret);
 void			fortysort(t_stack **sa, t_stack **sb, t_out *ret);
 /*
 ** OTHER FUNCTIONS
@@ -86,8 +85,8 @@ t_out			*outinit();
 */
 int				stacklen(t_stack *stack);
 t_stack			*getend(t_stack **stack);
-int				aassigngroups(t_stack **stack);
-int				bassigngroups(t_stack **stack);
+//int				aassigngroups(t_stack **stack);
+//int				bassigngroups(t_stack **stack);
 int				getminrun(t_stack *stacka);
 
 /*
