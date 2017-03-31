@@ -29,9 +29,7 @@ int		validnumbers(char **av)
 	while (av[i])
 	{
 		if (ps_big_atoi(av[i]) > INT_MAX || ps_big_atoi(av[i]) < INT_MIN)
-		{
 			return (0);
-		}
 		j = 0;
 		while (av[i][j])
 		{
@@ -40,9 +38,7 @@ int		validnumbers(char **av)
 			else if (!ft_isdigit(av[i][j]))
 			{
 				if (!(av[i][j] == '-' && ft_isdigit(av[i][j + 1])))
-				{
 					return (0);
-				}
 			}
 			j++;
 		}
@@ -92,6 +88,32 @@ t_stack	*makestack(char **av)
 	return (begin);
 }
 
+static int	hasdupes(t_stack *stacka)
+{
+	int num;
+	int flag;
+	t_stack *tmpa;
+	t_stack *tmpb;
+
+	tmpa = stacka;
+	while (stacka)
+	{
+		num = stacka->v;
+		flag = 0;
+		tmpb = tmpa;
+		while (tmpb)
+		{
+			if (tmpb->v == num)
+				flag++;
+			if (flag > 1)
+				return (1);
+			tmpb = tmpb->nx;
+		}
+		stacka = stacka->nx;
+	}
+	return (0);
+}
+
 t_stack	*valinput(int ac, char **av, t_stack *stacka)
 {
 	int	len;
@@ -111,5 +133,14 @@ t_stack	*valinput(int ac, char **av, t_stack *stacka)
 		return (NULL);
 	}
 	stacka = makestack(tmp);
+	if (hasdupes(stacka))
+	{
+		write(2, "Error\n", 6);
+		return (NULL);
+	}
 	return (stacka);
 }
+
+
+
+

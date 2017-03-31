@@ -336,13 +336,13 @@ int	threesort(t_stack **sa, t_stack **sb, t_out *ret)
 
 //can pick the size on numsort to make it a bit faster
 
-int numsort(t_stack **sa, t_stack **sb, t_out *ret)
+int numsort(t_stack **sa, t_stack **sb, t_out *ret, int size)
 {
 	int i;
 	int num;
 
 	i = 0;
-	num = 3;
+	num = size;
 	if (stacklen(*sa) != num)
 		return (0);
 	//fprintf(stderr, "NUM SORT FIRED sort:\n\n");
@@ -363,7 +363,6 @@ int numsort(t_stack **sa, t_stack **sb, t_out *ret)
 		updateretstack(ret, PA, sa, sb);
 		i++;
 	}
-
 	return (1);
 }
 
@@ -371,96 +370,35 @@ int numsort(t_stack **sa, t_stack **sb, t_out *ret)
 void	fortysort(t_stack **sa, t_stack **sb, t_out *ret)
 {
 	int i;
+	int len;
 
-	i = 0;
 	if (aassigngroups(sa) == 1)
 		return ;
-//	fprintf(stderr, "BEGIN:\n\n");
-//f	debug_pstacks(*sa, *sb);
+	i = 0;
+	len = 3;
+	if (stacklen(*sa) > 101)
+		len = 7;
 	while (*sa)
 	{
+		if (almostordered(*sa) || numsort(sa, sb, ret, len))
+			{
+				rotcor(ret, sa, sb, 0);
+				mergetwo(sa, sb, ret);
+				rotcor(ret, sa, sb, 0);
+				break;
+			}
 		astructmoves(*sa);
 		bstructmoves(*sa, *sb);
 		movedir(*sa);
-		//
-		//debug_pstacks(*sa, *sb);
-		//
 		insertbest(sa, sb, ret);
-
-		if (almostordered(*sa) || numsort(sa, sb, ret))// || almostordered(*sa))
-		{
-			rotcor(ret, sa, sb, 0);
-			//debug_pstacks(*sa, *sb);
-
-			//MERGETWO SOLUTION
-			mergetwo(sa, sb, ret);
-			//fprintf(stderr, "after merge two:\n\n");
-			//debug_pstacks(*sa, *sb);
-			rotcor(ret, sa, sb, 0);
-			//fprintf(stderr, "AT END:\n\n");
-			//debug_pstacks(*sa, *sb);
-			break;
-		}
-	}
-}
-
 /*
-void	insertbestworks(t_stack **sa, t_stack **sb, t_out *ret)
-{
-	t_stack *tmp;
-	int	moves;
-	int dir;
-	int b;
-	int a;
-
-	tmp = *sa;
-	moves = tmp->moves;
-	dir = tmp->dir;
-	b = (dir < 0 ? tmp->mbr : tmp->mbf);
-	a = (dir < 0 ? tmp->mar : tmp->maf);
-	while (tmp)
-	{
-		if (tmp->moves < moves)
-		{
-			moves = tmp->moves;
-			dir = tmp->dir;
-			b = (dir < 0 ? tmp->mbr : tmp->mbf);
-			a = (dir < 0 ? tmp->mar : tmp->maf);
-		}
-
-		tmp = tmp->nx;
-	}
-	//SEPERATE THSI FUNCITON
-	//function here to rotate the stack pre-pop
-	//fprintf(stderr, "dir:%d, b:%d, a:%d, moves:%d\n", dir, b, a, moves);
-	while (moves)
-	{
-		if (dir < 0)
-		{
-			if (b > 0 & a > 0)
-				updateretstack(ret, RRR, sa, sb);
-			else if (b > 0)
-				updateretstack(ret, RRB, sa, sb);
-			else if (a > 0)
-				updateretstack(ret, RRA, sa, sb);
-		}
-		else if (dir > 0)
-		{
-			if (b > 0 & a > 0)
-				updateretstack(ret, RR, sa, sb);
-			else if (b > 0)
-				updateretstack(ret, RB, sa, sb);
-			else if (a > 0)
-				updateretstack(ret, RA, sa, sb);
-		}
-		if (ordered(*sa))
-			return ;
-		a--;
-		b--;
-		moves--;
-		//fprintf(stderr, "after insert best decision iteration\n");
-		//debug_pstacks(*sa, *sb);
-	}
-	updateretstack(ret, PB, sa, sb);
-}
+		if (almostordered(*sa) || numsort(sa, sb, ret, len))
+			{
+				rotcor(ret, sa, sb, 0);
+				mergetwo(sa, sb, ret);
+				rotcor(ret, sa, sb, 0);
+				break;
+			}
 */
+	}
+}
