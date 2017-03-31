@@ -87,7 +87,7 @@ t_op	*getoplist(void)
 		prev = list;
 		list = list->next;
 	}
-	free(list);
+	//free(list);
 	prev->next = NULL;
 	return (begin);
 }

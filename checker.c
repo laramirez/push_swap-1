@@ -53,6 +53,28 @@ int		isordered(t_stack *stacka, t_stack *stackb)
 	return (1);
 }
 
+void	releasememory(t_stack *sa, t_op *oplist)
+{
+	t_op	*optmp;
+	t_stack *satmp;
+
+	while (oplist)
+	{
+		optmp = oplist;
+		oplist = oplist->next;
+		free(optmp);
+	}
+	while (sa)
+	{
+		satmp = sa;
+		sa = sa->nx;
+		free(satmp);
+	}
+	free(sa);
+
+
+}
+
 int main(int ac, char **av)
 {
 	t_op	*oplist;
@@ -78,5 +100,12 @@ int main(int ac, char **av)
 	}
 	else
 		ft_printf("KO\n");
+
+	releasememory(stacka, oplist);
 	return (0);
 }
+
+
+
+
+

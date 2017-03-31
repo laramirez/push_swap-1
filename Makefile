@@ -33,11 +33,8 @@ all: $(NAME1) $(NAME2)
 $(NAME1): $(OBJCS) $(LIBA)
 	gcc $(CFLAGS) -o $@ $^
 
-#make sure to remove this make clean!
-#make clean
 $(NAME2): $(OBJCS2) $(LIBA)
 	gcc $(CFLAGS) -o $@ $^
-
 
 $(LIBA):
 	cd $(LIB) && $(MAKE)
@@ -48,8 +45,7 @@ $(LIBA):
 clean:
 	rm -f $(OBJCS)
 	rm -f $(OBJCS2)
-
-#cd $(LIB) && make fclean, will add later, not necessary for debug
+	cd $(LIB) && make fclean
 
 fclean: clean
 	rm -f $(NAME1)

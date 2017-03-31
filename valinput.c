@@ -62,6 +62,13 @@ static void	varparse(t_stack **stack, char *avin)
 		(*stack) = (*stack)->nx;
 		j++;
 	}
+ 	j = 0;
+	while (tmp[j])
+	{
+		free(tmp[j]);
+		j++;
+	}
+	free(tmp);
 }
 
 t_stack	*makestack(char **av)
