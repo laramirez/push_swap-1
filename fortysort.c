@@ -5,11 +5,8 @@
 #include <sys/uio.h>
 #include <stdlib.h>
 #include <limits.h>
-//
-#include <stdio.h>
 
-
-static void	rotcor(t_out *ret, t_stack **sa, t_stack **sb, int descending)
+void	rotcor(t_out *ret, t_stack **sa, t_stack **sb, int descending)
 {
 	int tmp;
 
@@ -32,11 +29,7 @@ static void	rotcor(t_out *ret, t_stack **sa, t_stack **sb, int descending)
 				updateretstack(ret, RA, sa, sb);
 		else
 			while ((*sa)->v != tmp)
-			{
-				//fprintf(stderr, "in rot cor last while:\n\n");
 				updateretstack(ret, RRA, sa, sb);
-				//debug_pstacks(*sa, *sb);
-			}
 	}
 }
 
@@ -64,127 +57,46 @@ void	astructmoves(t_stack *sa)
 	}
 }
 
-void	bstructmoves(t_stack *sa, t_stack *sb)
+static void	movedirhelp(t_stack *sa, int *ar)
 {
-	int i;
-	t_stack *tmpb;
 
-	if (!(sb))
-		return ;
-	while (sa)
+	if (ar[0] <= ar[1] && ar[0] <= ar[2] && ar[0] <= ar[3])
 	{
-		i = 0;
-		tmpb = sb;
-		if (sa->v < (getend(&tmpb)->v) && sa->v > tmpb->v)
-		{
-			;
-		}
-		else if (sa->v > getlargest(sb))
-		{
-			while (tmpb->v != getlargest(sb))
-			{
-				i++;
-				tmpb = tmpb->nx;
-			}
-		}
-		else if (sa->v < getsmallest(sb))
-		{
-			i++;
-			while (tmpb->v != getsmallest(sb))
-			{
-				i++;
-				tmpb = tmpb->nx;
-			}
-		}
-		else if (sa->v > (getend(&tmpb)->v) && sa->v > tmpb->v)
-		{
-			while (sa->v > tmpb->v)
-			{
-				i++;
-				tmpb = tmpb->nx;
-			}
-			while (sa->v < tmpb->v)
-			{
-				i++;
-				tmpb = tmpb->nx;
-			}
-		}
-		else
-		{
-			while (sa->v < tmpb->v )
-			{
-				i++;
-				tmpb = tmpb->nx;
-			}
-		}
-		sa->mbf = i;
-		sa->mbr = (stacklen(sb)) - i;
-		sa = sa->nx;
+		sa->moves = ar[0];
+		sa->dir = 1;
+	}
+	else if (ar[1] <= ar[0] && ar[1] <= ar[2] && ar[1] <= ar[3])
+	{
+		sa->moves = ar[1];
+		sa->dir = 2;
+	}
+	else if (ar[2] <= ar[0] && ar[2] <= ar[1] && ar[2] <= ar[3])
+	{
+		sa->moves = ar[2];
+		sa->dir = 3;
+	}
+	else if (ar[3] <= ar[1] && ar[3] <= ar[0] && ar[3] <= ar[2])
+	{
+		sa->moves = ar[3];
+		sa->dir = 4;
 	}
 }
-
-//above here calculates moves for a and b
-
-/*
-void	movedirold(t_stack *sa)
-{
-	int forward;
-	int reverse;
-
-	while (sa)
-	{
-		forward = ((sa->maf > sa->mbf) ? sa->maf : sa->mbf);
-		reverse = ((sa->mar > sa->mbr) ? sa->mar : sa->mbr);
-		sa->moves = ((forward < reverse) ? forward : reverse);
-		if (forward <= reverse)
-			sa->dir = 1;
-		else
-			sa->dir = -1;
-		sa = sa->nx;
-	}
-}
-*/
 
 void	movedir(t_stack *sa)
 {
-	int bothforward;
-	int bothreverse;
-	int afbr;
-	int arbf;
+	int *ar;
 
+	ar = (int *)malloc(sizeof(int) * 4);
 	while (sa)
 	{
-		bothforward = ((sa->maf > sa->mbf) ? sa->maf : sa->mbf);
-		bothreverse = ((sa->mar > sa->mbr) ? sa->mar : sa->mbr);
-		afbr = sa->maf + sa->mbr;
-		arbf = sa->mar + sa->mbf;
-
-		if (bothforward <= bothreverse && bothforward <= afbr &&
-			   bothforward <= arbf)
-		{
-			sa->moves = bothforward;
-			sa->dir = 1;
-		}
-		else if (bothreverse <= bothforward && bothreverse <= afbr &&
-			   bothreverse <= arbf)
-		{
-			sa->moves = bothreverse;
-			sa->dir = 2;
-		}
-		else if (afbr <= bothforward && afbr <= bothreverse &&
-			   afbr <= arbf)
-		{
-			sa->moves = afbr;
-			sa->dir = 3;
-		}
-		else if (arbf <= bothreverse && arbf <= bothforward &&
-			   arbf <= afbr)
-		{
-			sa->moves = arbf;
-			sa->dir = 4;
-		}
+		ar[0] = ((sa->maf > sa->mbf) ? sa->maf : sa->mbf);
+		ar[1] = ((sa->mar > sa->mbr) ? sa->mar : sa->mbr);
+		ar[2] = sa->maf + sa->mbr;
+		ar[3] = sa->mar + sa->mbf;
+		movedirhelp(sa, ar);
 		sa = sa->nx;
 	}
+	free(ar);
 }
 
 void	prepoprot(t_stack *target, t_stack **sa, t_stack **sb, t_out *ret)
@@ -194,7 +106,6 @@ void	prepoprot(t_stack *target, t_stack **sa, t_stack **sb, t_out *ret)
 	int b;
 
 	moves = target->moves;
-
 	while (moves)
 	{
 		if (target->dir == 1)
@@ -258,11 +169,7 @@ void	prepoprot(t_stack *target, t_stack **sa, t_stack **sb, t_out *ret)
 		if (ordered(*sa))
 			return ;
 		moves--;
-		//fprintf(stderr, "after insert best decision iteration\n");
-		//debug_pstacks(*sa, *sb);
 	}
-
-
 }
 
 void	insertbest(t_stack **sa, t_stack **sb, t_out *ret)
@@ -271,7 +178,6 @@ void	insertbest(t_stack **sa, t_stack **sb, t_out *ret)
 	t_stack *target;
 	int moves;
 
-	//get t_stack taht has the minimum number of moves
 	tmp = *sa;
 	target = tmp;
 	moves = tmp->moves;
@@ -284,11 +190,9 @@ void	insertbest(t_stack **sa, t_stack **sb, t_out *ret)
 		}
 		tmp = tmp->nx;
 	}
-
 	prepoprot(target, sa, sb, ret);
 	updateretstack(ret, PB, sa, sb);
 }
-
 
 void	mergetwo(t_stack **sa, t_stack **sb, t_out *ret)
 {
@@ -304,37 +208,27 @@ void	mergetwo(t_stack **sa, t_stack **sb, t_out *ret)
 			rotcor(ret, sa, sb, 0);
 			updateretstack(ret, PA, sa, sb);
 		}
-		else if ((*sb)->v > (*sa)->v )//&& (!(((*sb)->v) > getlargest(*sa))))
+		else if ((*sb)->v > (*sa)->v )
 			updateretstack(ret, RA, sa, sb);
 		else if ((*sb)->v < (*sa)->v && (*sb)->v > (getend(sa))->v)
 			updateretstack(ret, PA, sa, sb);
 		else
 			updateretstack(ret, RRA, sa, sb);
-		//this look slike it just reverse rotates by default instead of goes to
-		//the right place to insert
 	}
 }
 
 int	threesort(t_stack **sa, t_stack **sb, t_out *ret)
 {
-
 	if (stacklen(*sa) != 3)
 		return (0);
-
-	//debug_pstacks(*sa, *sb);
 	if ((*sa)->v == getlargest(*sa) && ((*sa)->nx)->v < (getend(sa))->v)
 		return (1);
 	else if ((*sa)->v > ((*sa)->nx)->v)
 		updateretstack(ret, SA, sa, sb);
 	else if ((*sa)->v == getsmallest(*sa) && ((*sa)->nx)->v == getlargest(*sa))
 		updateretstack(ret, SA, sa, sb);
-
-	//fprintf(stderr, "AFTER THREE SORT FIRED sort:\n\n");
-	//debug_pstacks(*sa, *sb);
 	return (1);
 }
-
-//can pick the size on numsort to make it a bit faster
 
 int numsort(t_stack **sa, t_stack **sb, t_out *ret, int size)
 {
@@ -345,16 +239,12 @@ int numsort(t_stack **sa, t_stack **sb, t_out *ret, int size)
 	num = size;
 	if (stacklen(*sa) != num)
 		return (0);
-	//fprintf(stderr, "NUM SORT FIRED sort:\n\n");
-	//debug_pstacks(*sa, *sb);
 	while (i < (num - 3))
 	{
 		rotcor(ret, sa, sb, 0);
 		updateretstack(ret, PB, sa, sb);
 		i++;
 	}
-	//fprintf(stderr, "Before 3 sort:\n\n");
-	//debug_pstacks(*sa, *sb);
 	threesort(sa, sb, ret);
 	i = 0;
 	while (i < (num - 3))
@@ -365,7 +255,6 @@ int numsort(t_stack **sa, t_stack **sb, t_out *ret, int size)
 	}
 	return (1);
 }
-
 
 void	fortysort(t_stack **sa, t_stack **sb, t_out *ret)
 {
@@ -391,14 +280,5 @@ void	fortysort(t_stack **sa, t_stack **sb, t_out *ret)
 		bstructmoves(*sa, *sb);
 		movedir(*sa);
 		insertbest(sa, sb, ret);
-/*
-		if (almostordered(*sa) || numsort(sa, sb, ret, len))
-			{
-				rotcor(ret, sa, sb, 0);
-				mergetwo(sa, sb, ret);
-				rotcor(ret, sa, sb, 0);
-				break;
-			}
-*/
 	}
 }

@@ -6,9 +6,6 @@
 #include <stdlib.h>
 #include <limits.h>
 
-//
-#include <stdio.h>
-
 int		getlargest(t_stack *sb)
 {
 	int		largest;
@@ -48,6 +45,7 @@ int		wheredest(t_stack *sb)
 	}
 	return (loc < (i / 2) ? loc : (((i+ 1) - loc) * -1));
 }
+
 
 int		wheredestj(t_stack *sb, int j)
 {

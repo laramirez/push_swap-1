@@ -55,6 +55,7 @@ int				getlargest(t_stack *sb);
 int				wheredest(t_stack *sb);
 int				wheredestj(t_stack *sb, int j);
 int				getsmallest(t_stack *sb);
+void			bstructmoves(t_stack *sa, t_stack *sb);
 /*
 ** ALGORITHM FUNCTIONS
 */
