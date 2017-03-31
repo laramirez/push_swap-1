@@ -71,8 +71,6 @@ void	releasememory(t_stack *sa, t_op *oplist)
 		free(satmp);
 	}
 	free(sa);
-
-
 }
 
 int main(int ac, char **av)
@@ -100,7 +98,6 @@ int main(int ac, char **av)
 	}
 	else
 		ft_printf("KO\n");
-
 	releasememory(stacka, oplist);
 	return (0);
 }
