@@ -25,7 +25,8 @@ OBJCS = debug.o checker.o initstruct.o valinput.o debug.o fswap.o fpush.o \
 
 OBJCS2 = debug.o push_swap.o valinput.o initstruct.o fswap.o fpush.o frot.o \
 		 frevrot.o valops.o ordercheck.o helpers.o initstructhelp.o \
-		 rethelp.o timsort.o fortysort.o bstructmoves.o
+		 rethelp.o timsort.o fortysort.o bstructmoves.o movedir.o \
+		 prepoprot.o
 
 all: $(NAME1) $(NAME2)
 

@@ -56,6 +56,10 @@ int				wheredest(t_stack *sb);
 int				wheredestj(t_stack *sb, int j);
 int				getsmallest(t_stack *sb);
 void			bstructmoves(t_stack *sa, t_stack *sb);
+void			movedir(t_stack *sa);
+void			astructmoves(t_stack *sa);
+void			rotcor(t_out *ret, t_stack **sa, t_stack **sb, int descending);
+void			prepoprot(t_stack *target, t_stack **sa, t_stack **sb, t_out *ret);
 /*
 ** ALGORITHM FUNCTIONS
 */

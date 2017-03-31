@@ -8,6 +8,7 @@
 
 #define SWAPTOPB ((*sb)->nx && (*sb)->v < ((*sb)->nx)->v)
 
+/*
 static void	rotcor(t_out *ret, t_stack **sa, t_stack **sb, int descending)
 {
 	int tmp;
@@ -36,6 +37,7 @@ static void	rotcor(t_out *ret, t_stack **sa, t_stack **sb, int descending)
 		aassigngroups(sa);
 	}
 }
+*/
 
 static void	mergestack(t_stack **sa, t_stack **sb, t_out *ret)
 {
