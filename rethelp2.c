@@ -55,7 +55,6 @@ void	printret(t_out *ret)
 	{
 		if (ret->num == NOTHING)
 		{
-			printelement2(ret->num);
 			break;
 		}
 		printelement2(ret->num);

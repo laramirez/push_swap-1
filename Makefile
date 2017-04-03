@@ -14,9 +14,9 @@ NAME1 = checker
 
 NAME2 = push_swap
 
-LIB = /nfs/2016/m/mgould/thelibrary/
+LIB = libft
 
-LIBA = /nfs/2016/m/mgould/thelibrary/libft.a
+LIBA = libft/libft.a
 
 CFLAGS = -Wall -Wextra -Werror -I $(LIB) -I .
 
